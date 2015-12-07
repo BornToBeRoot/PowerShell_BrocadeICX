@@ -2,6 +2,8 @@
 ## Description
 Module and script collection for PowerShell to administrate Brocade Switches over SSH
 
+With the Module "Brocade" you can execute commands over SSH without receiving the following error message: "☺Protocol error, doesn't start with scp!"
+
 ## Requirements
 
 - Posh-SSH (https://github.com/darkoperator/Posh-SSH)
