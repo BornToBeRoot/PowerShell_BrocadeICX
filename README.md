@@ -16,8 +16,8 @@ With the Module "Brocade" you can execute commands over SSH without receiving th
 
 ### Brocade (Module)
 
-- Copy the folder named "Modules/Brocade" in your Profile under C:\Users\%username%\Documents\WindowsPowerShell\Modules
-- Open a PowerShell and import the Module with "Import-Module Brocade"
+1. Copy the folder named "Modules/Brocade" in your Profile under C:\Users\%username%\Documents\WindowsPowerShell\Modules
+2. Open a PowerShell and import the Module with "Import-Module Brocade"
 
 ## Syntax
 
