@@ -25,21 +25,21 @@ With the Module "Brocade" you can execute commands over SSH without receiving th
 
 #### New-BrocadeSession
 
-"New-BrocadeSession [-ComputerName] <string> [[-Credentials] <pscredential>] [<CommonParameters>]"
+New-BrocadeSession [-ComputerName] $string [[-Credentials] $pscredential ]
 
 #### Get-BrocadeSession
 
-Get-BrocadeSession [[-SessionID] <int[]>]  [<CommonParameters>]
+Get-BrocadeSession [[-SessionID] $int[]]
 
-Get-BrocadeSession [[-ComputerName] <string[]>] [[-ExactMatch]]  [<CommonParameters>]
+Get-BrocadeSession [[-ComputerName] $string[]] [[-ExactMatch]]
 
 #### Invoke-BrocadeSession
 
-Invoke-BrocadeCommand [-Session] <Object> [-Command] <string> [-WaitTime] <int>  [<CommonParameters>]
+Invoke-BrocadeCommand [-Session] $Object [-Command] $string [-WaitTime] $int
 
 #### Remove-BrocadeSession
 
-Remove-BrocadeSession [-SessionID] <int[]>  [<CommonParameters>]
+Remove-BrocadeSession [-SessionID] $int[]
 
 Remove-BrocadeSession [-Session] <Object>  [<CommonParameters>]
 
