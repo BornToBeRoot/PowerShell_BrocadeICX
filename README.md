@@ -41,7 +41,7 @@ Invoke-BrocadeCommand [-Session] $Object [-Command] $string [-WaitTime] $int
 
 Remove-BrocadeSession [-SessionID] $int[]
 
-Remove-BrocadeSession [-Session] <Object>  [<CommonParameters>]
+Remove-BrocadeSession [-Session] $Object
 
 ---
 
