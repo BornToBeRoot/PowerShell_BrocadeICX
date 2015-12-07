@@ -109,7 +109,7 @@ foreach($Switch in ($NetworkScan | Where-Object {$_.Status -eq "Up" -and $_.Host
     Write-Host "- - - / Host Output - - -`n"
 
 	# Close Brocade Session
-    Remove-BrocadeSession -Session $BrocadeSessions
+    Remove-BrocadeSession -Session $Session
 
 	$DeviceCount ++	
 	
