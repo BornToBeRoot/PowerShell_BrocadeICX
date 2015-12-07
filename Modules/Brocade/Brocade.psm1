@@ -163,22 +163,29 @@ function Remove-BrocadeSession {
 		$Session
 	)
     
-    $Sessions = @()
+    $Sessions2Remove = @()
 
     if($PSCmdlet.ParameterSetName -eq 'SessionID')
     {
-        $Sessions = Get-BrocadeSession -SessionID $SessionID                        
+        $Sessions2Remove = Get-BrocadeSession -SessionID $SessionID                        
     } 
     else
     {
-        $Sessions = $Session
+        $Sessions2Remove = $Session
     }
 
-    foreach($Session in $Sessions)
-    {    
-        Remove-SSHSession -SessionId $Session.SessionID | Out-Null
+    for($i = $Sessions2Remove.Count -1; $i -ge 0; --$i)
+    {
+        Remove-SSHSession -SessionId $Sessions2Remove[$i].SessionID | Out-Null
 	
-	    $Global:BrocadeSessions.Remove($Session)	
+	    $Global:BrocadeSessions.Remove($Sessions2Remove[$i])	
+    }
+
+    foreach($Session2Remove in $Sessions2Remove)
+    {    
+        Remove-SSHSession -SessionId $Session2Remove.SessionID | Out-Null
+	
+	    $Global:BrocadeSessions.Remove($Session2Remove)	
     }
 }
 
