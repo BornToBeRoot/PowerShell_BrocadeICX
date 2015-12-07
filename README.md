@@ -2,6 +2,8 @@
 ## Description
 Module and script collection for PowerShell to administrate Brocade Switches over SSH
 
+---
+
 With the Module "Brocade" you can execute commands over SSH without receiving the following error message: "☺Protocol error, doesn't start with scp!"
 
 ## Requirements
@@ -13,9 +15,17 @@ With the Module "Brocade" you can execute commands over SSH without receiving th
 - Copy the folder named "Modules/Brocade" in your Profile under C:\Users\%username%\Documents\WindowsPowerShell\Modules
 - Open a PowerShell and import the Module with "Import-Module Brocade"
 
-## Commands
+## Syntax
 ### Brocade (Module)
+New-BrocadeSession [-ComputerName] <string> [[-Credentials] <pscredential>] [<CommonParameters>]
 
+Get-BrocadeSession [[-SessionID] <int[]>]  [<CommonParameters>]
+Get-BrocadeSession [[-ComputerName] <string[]>] [[-ExactMatch]]  [<CommonParameters>]
+
+Invoke-BrocadeCommand [-Session] <Object> [-Command] <string> [-WaitTime] <int>  [<CommonParameters>]
+
+Remove-BrocadeSession [-SessionID] <int[]>  [<CommonParameters>]
+Remove-BrocadeSession [-Session] <Object>  [<CommonParameters>]
 ---
 ## Idea and Help
 The idea comes from the contributions on StackOverflow and Reddit that describe the procedure:
