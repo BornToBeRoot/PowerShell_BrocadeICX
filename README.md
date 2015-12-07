@@ -25,7 +25,7 @@ With the Module "Brocade" you can execute commands over SSH without receiving th
 
 #### New-BrocadeSession
 
-New-BrocadeSession [-ComputerName] <string> [[-Credentials] <pscredential>] [<CommonParameters>]
+"New-BrocadeSession [-ComputerName] <string> [[-Credentials] <pscredential>] [<CommonParameters>]"
 
 #### Get-BrocadeSession
 
