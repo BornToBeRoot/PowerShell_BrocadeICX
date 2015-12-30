@@ -180,13 +180,6 @@ function Remove-BrocadeSession {
 	
 	    $Global:BrocadeSessions.Remove($Sessions2Remove[$i])	
     }
-
-    foreach($Session2Remove in $Sessions2Remove)
-    {    
-        Remove-SSHSession -SessionId $Session2Remove.SessionID | Out-Null
-	
-	    $Global:BrocadeSessions.Remove($Session2Remove)	
-    }
 }
 
 ##################################################################################################################
