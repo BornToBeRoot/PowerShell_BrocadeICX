@@ -34,35 +34,35 @@ It doesn't matter where you store the scripts (I only use relative paths) The on
 
 #### New-BrocadeSession
 
-'''powershell
+```powershell
 New-BrocadeSession [-ComputerName] <String[]> [[-Credentials] <PSCredential>] [<CommonParameters>]
-'''
+```
 
 #### Get-BrocadeSession
 
-'''powershell
+```powershell
 Get-BrocadeSession [[-SessionID] <Int32[]>] [<CommonParameters>]
 
 Get-BrocadeSession [[-ComputerName] <String[]>] [[-ExactMatch]] [<CommonParameters>]
-'''
+```
 
 #### Invoke-BrocadeSession
 
-'''powershell
+```powershell
 Invoke-BrocadeCommand [-Session] <PSObject[]> [-Command] <String> [[-WaitTime] <Int32>] [<CommonParameters>]
-'''
+```
 
 #### Remove-BrocadeSession
 
-'''powershell
+```powershell
 Remove-BrocadeSession [-Session] <PSObject[]> [<CommonParameters>]
 
 Remove-BrocadeSession [-SessionID] <Int32[]> [<CommonParameters>]
-'''
+```
 
 ## Example
 
-'''powershell
+```powershell
 > New-BrocadeSession -ComputerName TEST_DEVICE1
 
 > Invoke-Command -Command "sh clock" -Wait 500 -Session (Get-BrocadeSession -SessionID 0)
@@ -72,22 +72,25 @@ sh clock
 SSH@TEST_DEVICE1#
 
 > Get-BrocadeSession -SessionID 0 | Remove-BrocadeSession
-'''
+```
 
 ## Output
 
 ### Session
 
-'''powershell
+```powershell
 > Get-BrocadeSession
 
  SessionID ComputerName                       Session                            Stream
  --------- ------------                       -------                            ------
          0 TEST_DEVICE1                       SSH.SshSession                     Renci.SshNet.ShellStream
          1 TEST_DEVICE2                       SSH.SshSession                     Renci.SshNet.ShellStream
-'''
+```
 
 # ChangeLog
+
+##Version 1.0
+* Release Brocade Module
 
 # Know Issues
 
