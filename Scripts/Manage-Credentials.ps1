@@ -10,6 +10,7 @@
 <#
     .SYNOPSIS
     Script to Encrypt/Decrypt Credentials (Username and Password) and save them as xml-file using SecureStrings
+    
     .DESCRIPTION
     With this script, you can encrypt your credentials (username and password) as SecureStrings and save them 
     as a variable or xml-file. You can also decrypt the variable or xml-file and return a PSCredential-Object
@@ -22,13 +23,16 @@
         
     If you found a bug or have some ideas to improve this script... Let me know. You find my Github profile in
     the links below.
+    
     .EXAMPLE
     $Test_Cred = .\Manage-Credentials.ps1 -Encrypt
     
     .EXAMPLE
     .\Manage-Credentials.ps1 -Encrypt -OutFile Test_Cred.xml
+    
     .EXAMPLE
     .\Manage-Credentials.ps1 -Decrypt -EncryptedCredentials $Test_Cred
+    
     .EXAMPLE
     .\Manage-Credentials.ps1 -Decrypt -FilePath .\Test_Cred.xml -PasswordAsPlainText
     

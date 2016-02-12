@@ -1,27 +1,28 @@
 ###############################################################################################################
 # Language     :  PowerShell 4.0
-# Script Name  :  
+# Script Name  :  BrocadeConfigToTFTP.ps1
 # Autor        :  BornToBeRoot (https://github.com/BornToBeRoot)
-# Description  :  
+# Description  :  Copy startup or running config to a TFTP-Server
 # Repository   :  https://github.com/BornToBeRoot/..
 ###############################################################################################################
 
 <#
     .SYNOPSIS
-    Copy the Running-Config to TFTP from all active brocade switch devices
+    Copy the running or startup configuration of all active brocade switch devices to a TFTP-Server.
 
-    .DESCRIPTION
-    This Script uses the ScanNetworkAsync.ps1-Script to scan for all active switch devices (Identified by $SwitchIdentifier) and execute the command to copy the running-config to the TFTP-Server.  
-    
-    Requirements: Posh-SSH and Module "Brocade" 
+    .DESCRIPTION    
+    This script allowes you to scan your network (requieres ScanNetworksAsync.ps1) for all active switch devices,
+    identify by the Parameter -SwitchIdentifier, and copy the startup or running configuration to a TFTP-Server.
 
     .EXAMPLE
-    ./RunningConfigToTFTP.ps1 -TFTPServer 172.16.XX.XX -StartIP 192.168.1.XX -EndIP 192.168.1.XX -SwitchIdentifier XX_
+    .\BrocadeConfigToTFTP.ps1 -TFTPServer 192.168.1.2 -StartIPAddress 192.168.2.100 -EndIPAddress 192.168.2.200 
+    -ConfigToCopy Running
 
     .LINK
-    https://github.com/BornToBeRoot/PowerShell-SSH-Brocade
+
     https://github.com/BornToBeRoot/PowerShell-Async-IPScanner
-    https://github.com/darkoperator/Posh-SSH
+    https://github.com/BornToBeRoot/PowerShell-SSH-Brocade
+    https://github.com/BornToBeRoot
 #>
 
 ### Parameter ####################################################################################################
@@ -31,19 +32,19 @@ param(
 	[Parameter(
 		Position=0,
 		Mandatory=$true,
-		HelpMessage='Enter the TFTP-Server IP-Address (e.g. 172.16.XX.XX)')]
+		HelpMessage='TFTP-Server IP-Address like 192.168.0.10')]
 	[String]$TFTPServer,
 	
 	[Parameter(
 		Position=1,
 		Mandatory=$true,
-		HelpMessage='Start IP like 192.168.XX.XX')]
+		HelpMessage='Start IP-Address like 192.168.0.100')]
 	[String]$StartIPAddress,
 	
 	[Parameter(
 		Position=2,
 		Mandatory=$true,
-		HelpMessage='End IP like 192.168.XX.XX')]
+		HelpMessage='End IP-Address like 192.168.0.200')]
 	[String]$EndIPAddress,
 
     [Parameter(
@@ -55,9 +56,15 @@ param(
     [Parameter(
         Position=4,
         Mandatory=$false,
-        HelpMessage='Switch Identifiert like XX_')]
-    [String]$SwitchIdentifier   
-
+        HelpMessage='Switch Identifiert like XX_ (Only connect to devices whose hostname starts with XX_)')]
+    [String]$SwitchIdentifier,
+    
+    [Parameter(
+        Position=5,
+        Mandatory=$true,
+        HelpMessage='Copy startup or running config to tftp')]
+    [ValidateSet('Startup', 'Running')]
+    [String]$ConfigToCopy
 )
 
 ##################################################################################################################
@@ -69,18 +76,18 @@ Begin{
     $ScriptFileName = $MyInvocation.MyCommand.Name  
     $Timestamp = Get-Date -UFormat "%Y%m%d"
 
-    ### Get Credentials
+    # Get Credentials
     if($Credentials -eq $null)
 		{		
 			try{
 				$Credentials = Get-Credential $null
 			}catch{
-				Write-Host "Entering credentials was aborted. Can't connect without credentials! Exit script..." -ForegroundColor Red
+				Write-Host "Entering credentials was aborted. Can't connect without credentials..." -ForegroundColor Red
 				return
 			}
 	    }	
     
-    ### Scanning Network...
+    # Scanning Network...
     $NetworkScan  = Invoke-Expression -Command "$Script_Startup_Path\ScanNetworkAsync.ps1 -StartIPAddress $StartIPAddress -EndIPAddress $EndIPAddress"
     if($NetworkScan -eq $null) 
     { 
@@ -88,14 +95,18 @@ Begin{
         exit
     }
         
+    # Start with actual script
     $StartTime = Get-Date
-    $DeviceCount = 0
+    $DeviceCountSuccess = 0
+    $DeviceCountFailed = 0
+    
+    Write-Host "`n`nStart: Script ($ScriptFileName) at $StartTime`n" -ForegroundColor Green
+    
+    Write-Host "Devices found..." -ForegroundColor Yellow
+    
+    $NetworkScan
 
-    Write-Host "`n----------------------------------------------------------------------------------------------------"
-    Write-Host "----------------------------------------------------------------------------------------------------`n"
-    Write-Host "Start: Script ($ScriptFileName) at $StartTime" -ForegroundColor Green
-    Write-Host "`n----------------------------------------------------------------------------------------------------`n"
-    Write-Host "Executing Commands on Switches...`n" -ForegroundColor Yellow
+    Write-Host "`nExecuting Commands on Switches..." -ForegroundColor Yellow
 }
 
 ##################################################################################################################
@@ -111,24 +122,30 @@ Process{
             $Hostname = $Switch.Hostname
         }
 	    
-        Write-Host "Device:`t`t`t$Hostname" -ForegroundColor Cyan
+        Write-Host "`nDevice:`t`t`t$Hostname" -ForegroundColor Cyan
 		
 	    # Create new Brocade Session	
  	    $Session = New-BrocadeSession -ComputerName $Hostname -Credentials $Credentials
 
-        $Command = [String]::Format("copy running-config tftp {0} {1}_{2}.bak", $TFTPServer, $Timestamp, $Hostname)
+        if($Session -eq $null)
+        {
+            $DeviceCountFailed ++
+            continue
+        }
+
+        $Command = [String]::Format("copy {0}-config tftp {1} {2}_{0}-config__{3}.bak", $ConfigToCopy.ToLower(), $TFTPServer, $Timestamp, $Hostname)
         Write-Host "Command:`t`t$Command" -ForegroundColor Cyan
-	    Write-Host "`n- - - Host Output - - -`n"
+	    Write-Host "`nStart:`tHost Output" -ForegroundColor Magenta
 
 	    # Execute Command in Session
         Invoke-BrocadeCommand -Session $Session -Command $Command -WaitTime 5000
 
-        Write-Host "`n- - - / Host Output - - -`n"
+        Write-Host "End:`tHost Output" -ForegroundColor Magenta
 
 	    # Close Brocade Session
         Remove-BrocadeSession -Session $Session
 
-	    $DeviceCount ++	
+	    $DeviceCountSuccess ++	
 	
 	    Start-Sleep -Seconds 1
     }
@@ -140,14 +157,18 @@ Process{
 End{
     $Credentials = $null
     $EndTime = Get-Date
-    $ExecutionTime = (New-TimeSpan -Start $StartTime -End $EndTime).Seconds
+    
+    # Calculate the time between Start and End
+    $ExecutionTimeMinutes = (New-TimeSpan -Start $StartTime -End $EndTime).Minutes
+    $ExecutionTimeSeconds = (New-TimeSpan -Start $StartTime -End $EndTime).Seconds
 
-    Write-Host "Executing Commands on Switches finished!" -ForegroundColor Yellow
-    Write-Host "`n----------------------------------------------------------------------------------------------------`n"
-    Write-Host "Number of Devices:`t$DeviceCount"
-    Write-Host "`n----------------------------------------------------------------------------------------------------`n"
-    Write-Host "Script duration:`t$ExecutionTime (Seconds)`n" -ForegroundColor Yellow
+    Write-Host "`nExecuting Commands on Switches finished!" -ForegroundColor Yellow
+    Write-Host "`n+----------------------------------------Result-----------------------------------------"
+    Write-Host "|"
+    Write-Host "|  Successful:`t$DeviceCountSuccess"
+    Write-Host "|  Failed:`t$DeviceCountFailed"
+    Write-Host "|"
+    Write-Host "+---------------------------------------------------------------------------------------`n"
+    Write-Host "Script duration:`t$ExecutionTimeMinutes Minutes $ExecutionTimeSeconds Seconds`n" -ForegroundColor Yellow
     Write-Host "End:`tScript ($ScriptFileName) at $EndTime" -ForegroundColor Green
-    Write-Host "`n----------------------------------------------------------------------------------------------------"
-    Write-Host "----------------------------------------------------------------------------------------------------`n"
 }

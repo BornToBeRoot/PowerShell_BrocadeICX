@@ -60,7 +60,25 @@ Remove-BrocadeSession [-Session] <PSObject[]> [<CommonParameters>]
 Remove-BrocadeSession [-SessionID] <Int32[]> [<CommonParameters>]
 ```
 
+#### Get-BrocadeVLAN
+
+```powershell
+Get-BrocadeVLAN [-ComputerName] <String> [[-Credentials] <PSCredential>] [<CommonParameters>]
+
+Get-BrocadeVLAN [-Session] <PSObject> [<CommonParameters>]
+```
+
+### Brocade Scripts
+
+#### Brocade-ConfigToTFTP.ps1
+
+```powershell
+.\Brocade-ConfigToTFTP.ps1 [-TFTPServer] <String> [-StartIPAddress] <String> [-EndIPAddress] <String> [[-Credentials] <PSCredential>] [[-SwitchIdentifier] <String>] [-ConfigToCopy] <String> [<CommonParameters>]
+```
+
 ## Example
+
+### New-BrocadeSession / Invoke-BrocadeCommand / Remove-BrocadeSession
 
 ```powershell
 > New-BrocadeSession -ComputerName TEST_DEVICE1
@@ -74,7 +92,23 @@ SSH@TEST_DEVICE1#
 > Get-BrocadeSession -SessionID 0 | Remove-BrocadeSession
 ```
 
-## Output
+### Get-BrocadeVLAN 
+
+```powershell
+> Get-BrocadeVLAN -ComputerName TEST_DEVICE1
+
+Id       : 1
+Name     : DEFAULT-VLAN
+By       : port
+Tagged   : {}
+Untagged : {}
+
+Id       : 1111
+Name     : TEST
+By       : port
+Tagged   : {1/1/1}
+Untagged : {1/1/2, 1/1/3, 1/1/4, 1/1/5...}
+```
 
 ### Session
 
@@ -87,12 +121,15 @@ SSH@TEST_DEVICE1#
          1 TEST_DEVICE2                       SSH.SshSession                     Renci.SshNet.ShellStream
 ```
 
-# ChangeLog
+## ChangeLog
 
-##Version 1.0
-* Release Brocade Module
+## 12.02.2016
+* Added Get-BrocadeVLAN Cmdlets in Brocade Module
+* Script and Module Improved
+* Added Brocade-CopyConfigToTFTP.ps1 to scripts (Copy Running-/Starup-Config to a TFTP-Server) - Removed old RunningConfigToTFTP.ps1 from scripts
+* Added Get-Help to the most of the Cmdlets/Scripts
 
-# Know Issues
+## Know Issues
 
 ---
 
