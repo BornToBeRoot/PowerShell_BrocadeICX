@@ -26,7 +26,7 @@ With the Module "Brocade" you can execute commands over SSH without receiving th
 
 ### Brocade Scripts
 
-It doesn't matter where you store the scripts (I only use relative paths) The only thing you need is a working "Brocade" and "Posh-SSH" Module.   
+It doesn't matter where you store the scripts (I only use relative paths). The only thing you need is a working "Brocade" and "Posh-SSH" Module.   
 
 ## Syntax
 
