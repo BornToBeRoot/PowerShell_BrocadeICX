@@ -137,6 +137,6 @@ Untagged : {1/1/2, 1/1/3, 1/1/4, 1/1/5...}
 
 ## More
 
-The basic idea to invoke ssh commands comes from the contributions on StackOverflow and Reddit that describe the procedure:
+The basic idea to invoke commands in an ssh stream comes from the contributions on StackOverflow and Reddit that describe the procedure:
 - https://stackoverflow.com/questions/30603219/executing-command-using-paramiko-on-brocade-switch
 - https://www.reddit.com/r/PowerShell/comments/3tgql4/poshssh_shell_reading/
