@@ -1,9 +1,9 @@
 ###############################################################################################################
 # Language     :  PowerShell 4.0
-# Script Name  :  BrocadeConfigToTFTP.ps1
+# Filename     :  Brocade-CopyConfigToTFTP.ps1
 # Autor        :  BornToBeRoot (https://github.com/BornToBeRoot)
 # Description  :  Copy startup or running config to a TFTP-Server
-# Repository   :  https://github.com/BornToBeRoot/..
+# Repository   :  https://github.com/BornToBeRoot/PowerShell-SSH-Brocade
 ###############################################################################################################
 
 <#
@@ -19,7 +19,6 @@
     -ConfigToCopy Running
 
     .LINK
-
     https://github.com/BornToBeRoot/PowerShell-Async-IPScanner
     https://github.com/BornToBeRoot/PowerShell-SSH-Brocade
     https://github.com/BornToBeRoot
@@ -76,12 +75,13 @@ Begin{
     $ScriptFileName = $MyInvocation.MyCommand.Name  
     $Timestamp = Get-Date -UFormat "%Y%m%d"
 
-    # Get Credentials
+    # Get-Credentials
     if($Credentials -eq $null)
 		{		
 			try{
 				$Credentials = Get-Credential $null
-			}catch{
+			}
+			catch{
 				Write-Host "Entering credentials was aborted. Can't connect without credentials..." -ForegroundColor Red
 				return
 			}
@@ -100,13 +100,13 @@ Begin{
     $DeviceCountSuccess = 0
     $DeviceCountFailed = 0
     
-    Write-Host "`n`nStart: Script ($ScriptFileName) at $StartTime`n" -ForegroundColor Green
+    Write-Host "`n`nScript ($ScriptFileName) started at $StartTime`n" -ForegroundColor Green
     
     Write-Host "Devices found..." -ForegroundColor Yellow
     
     $NetworkScan
 
-    Write-Host "`nExecuting Commands on Switches..." -ForegroundColor Yellow
+    Write-Host "`nExecuting Commands on switches..." -ForegroundColor Yellow
 }
 
 ##################################################################################################################
@@ -118,13 +118,14 @@ Process{
     {
         try{
             $Hostname = $Switch.Hostname.Split('.')[0]
-        }catch{
+        }
+		catch{
             $Hostname = $Switch.Hostname
         }
 	    
         Write-Host "`nDevice:`t`t`t$Hostname" -ForegroundColor Cyan
 		
-	    # Create new Brocade Session	
+	    # Create New-BrocadeSession	
  	    $Session = New-BrocadeSession -ComputerName $Hostname -Credentials $Credentials
 
         if($Session -eq $null)
@@ -135,14 +136,14 @@ Process{
 
         $Command = [String]::Format("copy {0}-config tftp {1} {2}_{0}-config__{3}.bak", $ConfigToCopy.ToLower(), $TFTPServer, $Timestamp, $Hostname)
         Write-Host "Command:`t`t$Command" -ForegroundColor Cyan
-	    Write-Host "`nStart:`tHost Output" -ForegroundColor Magenta
+	    Write-Host "`nStart:`tHost output" -ForegroundColor Magenta
 
-	    # Execute Command in Session
+	    # Execute command in session
         Invoke-BrocadeCommand -Session $Session -Command $Command -WaitTime 5000
 
-        Write-Host "End:`tHost Output" -ForegroundColor Magenta
+        Write-Host "End:`tHost output" -ForegroundColor Magenta
 
-	    # Close Brocade Session
+	    # Close Brocade session
         Remove-BrocadeSession -Session $Session
 
 	    $DeviceCountSuccess ++	
@@ -163,12 +164,10 @@ End{
     $ExecutionTimeSeconds = (New-TimeSpan -Start $StartTime -End $EndTime).Seconds
 
     Write-Host "`nExecuting Commands on Switches finished!" -ForegroundColor Yellow
-    Write-Host "`n+----------------------------------------Result-----------------------------------------"
-    Write-Host "|"
+    Write-Host "`n+=-=-=-=-=-=-=-=-=-=-=-=-=  Result  =-=-=-=-=-=-=-=-=-=-=-=-=`n|"
     Write-Host "|  Successful:`t$DeviceCountSuccess"
     Write-Host "|  Failed:`t$DeviceCountFailed"
-    Write-Host "|"
-    Write-Host "+---------------------------------------------------------------------------------------`n"
+    Write-Host "|`n+============================================================`n"
     Write-Host "Script duration:`t$ExecutionTimeMinutes Minutes $ExecutionTimeSeconds Seconds`n" -ForegroundColor Yellow
-    Write-Host "End:`tScript ($ScriptFileName) at $EndTime" -ForegroundColor Green
+    Write-Host "Script ($ScriptFileName) exit at $EndTime`n" -ForegroundColor Green
 }
