@@ -1,11 +1,10 @@
 ###############################################################################################################
 # Language     :  PowerShell 4.0
-# Script Name  :  Manage-Credentials.ps1
+# Filename     :  Manage-Credentials.ps1
 # Autor        :  BornToBeRoot (https://github.com/BornToBeRoot)
 # Description  :  Script to Encrypt/Decrypt Credentials and save them as variable or xml-file
-# Repository   :  https://github.com/BornToBeRoot/PowerShell-Manage-Credentials
+# Repository   :  https://github.com/BornToBeRoot/PowerShell_Manage-Credentials
 ###############################################################################################################
-# Date copied  : 09.02.2015 
 
 <#
     .SYNOPSIS
@@ -15,6 +14,7 @@
     With this script, you can encrypt your credentials (username and password) as SecureStrings and save them 
     as a variable or xml-file. You can also decrypt the variable or xml-file and return a PSCredential-Object
     or username and password in plain text.
+
     The encrypted credentials can only be decrypted on the same computer and under the same user, which encrypted
     them. 
     For exmaple: 
@@ -28,17 +28,17 @@
     $Test_Cred = .\Manage-Credentials.ps1 -Encrypt
     
     .EXAMPLE
-    .\Manage-Credentials.ps1 -Encrypt -OutFile Test_Cred.xml
+    .\Manage-Credentials.ps1 -Encrypt -OutFile E:\Scripts\Test_Cred.xml
     
     .EXAMPLE
     .\Manage-Credentials.ps1 -Decrypt -EncryptedCredentials $Test_Cred
     
     .EXAMPLE
-    .\Manage-Credentials.ps1 -Decrypt -FilePath .\Test_Cred.xml -PasswordAsPlainText
+    .\Manage-Credentials.ps1 -Decrypt -FilePath E:\Scripts\Test_Cred.xml -PasswordAsPlainText
     
     .LINK
     Github Profil:         https://github.com/BornToBeRoot
-    Github Repository:     https://github.com/BornToBeRoot/PowerShell-Manage-Credentials
+    Github Repository:     https://github.com/BornToBeRoot/PowerShell_Manage-Credentials
 #>
 
 
@@ -69,13 +69,13 @@ Param(
     [Parameter(
 		ParameterSetName='Decrypt',
 		Position=0,
-		HelpMessage='PSObject with encrypted credentials to decrypt them')]
+		HelpMessage='PSObject with encrypted credentials')]
 	[System.Object]$EncryptedCredentials,	
 
     [Parameter(
 		ParameterSetName='Decrypt',
 		Position=1,
-		HelpMessage='Path to the xml-file where the encrypted credentials are saved')]
+		HelpMessage='Path to the xml-file where the encrypted credentials ist stored')]
 	[String]$FilePath,
 
     [Parameter(
@@ -89,31 +89,32 @@ Begin{}
 Process
 {
     if($Encrypt)
-    {
+	{
         if($Credentials -eq $null)
         {
             try{
                 $Credentials = Get-Credential $null 
-            } catch {
+            } 
+			catch{
                 Write-Host "Canceled by User." -ForegroundColor Yellow
                 return
             }      
         }
-            
-        $EncryptedCredentials = New-Object -Type PSObject
-        Add-Member -InputObject $EncryptedCredentials -MemberType NoteProperty -Name UsernameAsSecureString -Value ($Credentials.Username | ConvertTo-SecureString -AsPlainText -Force | ConvertFrom-SecureString)
-	    Add-Member -InputObject $EncryptedCredentials -MemberType NoteProperty -Name PasswordAsSecureString -Value ($Credentials.Password | ConvertFrom-SecureString)
-    
-        if(-not[String]::IsNullOrEmpty($OutFile))
-        {        
-            $FilePath = $OutFile.Replace(".\","").Replace("\","") 
-                
-            if(-not([System.IO.Path]::IsPathRooted($FilePath))) 
-            { 
-                $ScriptPath = Split-Path -Parent $MyInvocation.MyCommand.Path
-
-                $FilePath = Join-Path -Path $ScriptPath -ChildPath $FilePath
+            		
+		$EncryptedCredentials = New-Object -TypeName PSObject
+		Add-Member -InputObject $EncryptedCredentials -MemberType NoteProperty -Name UsernameAsSecureString -Value ($Credentials.UserName | ConvertTo-SecureString -AsPlainText -Force | ConvertFrom-SecureString)
+		Add-Member -InputObject $EncryptedCredentials -MemberType NoteProperty -Name PasswordAsSecureString -Value ($Credentials.Password | ConvertFrom-SecureString)
+				
+        if(-not([String]::IsNullOrEmpty($OutFile)))
+        {               
+			if(-not([System.IO.Path]::IsPathRooted($OutFile))) 
+            { 	
+				$FilePath = Join-Path -Path $PSScriptRoot -ChildPath $OutFile.Replace(".\","")
             }
+			else
+			{
+				$FilePath = $OutFile
+			}
 	    
             if(-not($FilePath.ToLower().EndsWith(".xml"))) 
             { 
@@ -124,15 +125,13 @@ Process
             {
                 Write-Host "Overwriting existing file ($FilePath)" -ForegroundColor Yellow
             }           
-        
-            $FilePath
-
+			
             $EncryptedCredentials | Export-Clixml -Path $FilePath
         }
         else
         {
             return $EncryptedCredentials   
-        }    
+        }  
     }
     elseif($Decrypt)
     {
@@ -148,32 +147,33 @@ Process
     
         if($EncryptedCredentials -eq $null)
         {
-            Write-Host 'Nothing to decrypt! Try "-EncryptedCredentials" or "-FilePath"' -ForegroundColor Yellow
+            Write-Host 'Nothing to decrypt! Use the parameter "-EncryptedCredentials" or "-FilePath"' -ForegroundColor Yellow
             Write-Host 'Try "Get-Help .\Manage-Credentials.ps1" for more details'
             return
         }    
-
-        $SecureString_Password = $EncryptedCredentials.PasswordAsSecureString | ConvertTo-SecureString 
-        $SecureString_Username = $EncryptedCredentials.UsernameAsSecureString | ConvertTo-SecureString
+				
+		$SecureString_Password = $EncryptedCredentials.PasswordAsSecureString | ConvertTo-SecureString 
+		$SecureString_Username = $EncryptedCredentials.UsernameAsSecureString | ConvertTo-SecureString
     
-        $BSTR_Username = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($SecureString_Username)
-        $Username = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR_Username) 
-     
-       
-        if($PasswordAsPlainText) 
-        {
-            $BSTR_Password = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($SecureString_Password)
-            $Password = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR_Password)
-
-            $PlainText_Credentials = New-Object -Type PSObject
-            Add-Member -InputObject $PlainText_Credentials -MemberType NoteProperty -Name Username -Value $Username
-	        Add-Member -InputObject $PlainText_Credentials -MemberType NoteProperty -Name Password -Value $Password
-
-            return $PlainText_Credentials
+		$BSTR_Username = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($SecureString_Username)
+		$Username = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR_Username)      
+				
+		if($PasswordAsPlainText) 
+        {			
+			$BSTR_Password = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($SecureString_Password)
+			$Password = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR_Password)
+			
+			$PlainText_Credentials = New-Object -TypeName PSObject
+			Add-Member -InputObject $PlainText_Credentials -MemberType NoteProperty -Name Username -Value $Username
+			Add-Member -InputObject $PlainText_Credentials -MemberType NoteProperty -Name Password -Value $Password
+		
+			return $PlainText_Credentials						
         }
         else
         {
-            return New-Object System.Management.Automation.PSCredential($Username , $SecureString_Password)
+			$Credentials = New-Object System.Management.Automation.PSCredential($Username, $SecureString_Password)
+
+            return $Credentials
         }
     }
     else
