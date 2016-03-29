@@ -6,6 +6,15 @@
 # Repository   :  https://github.com/BornToBeRoot/PowerShell-SSH-Brocade
 ###############################################################################################################
 
+
+### Requirements ##############################################################################################
+#
+# - Posh-SSH (Module)
+# - Brocade (Module)
+# - ScanNetworkAsync.ps1 (Script)
+#
+###############################################################################################################
+
 <#
     .SYNOPSIS
     Copy the running or startup configuration of all active brocade switch devices to a TFTP-Server.
@@ -14,17 +23,19 @@
     This script allowes you to scan your network (requieres ScanNetworksAsync.ps1) for all active switch devices,
     identify by the Parameter -SwitchIdentifier, and copy the startup or running configuration to a TFTP-Server.
 
+	Requirements:
+	- Posh-SSH (Module)
+    - Brocade (Module)
+    - ScanNetworkAsync.ps1 (Script)
+
     .EXAMPLE
     .\BrocadeConfigToTFTP.ps1 -TFTPServer 192.168.1.2 -StartIPAddress 192.168.2.100 -EndIPAddress 192.168.2.200 
     -ConfigToCopy Running
 
     .LINK
-    https://github.com/BornToBeRoot/PowerShell-Async-IPScanner
     https://github.com/BornToBeRoot/PowerShell-SSH-Brocade
     https://github.com/BornToBeRoot
 #>
-
-### Parameter ####################################################################################################
 
 [CmdletBinding()]
 param(
@@ -48,13 +59,11 @@ param(
 
     [Parameter(
         Position=3,
-        Mandatory=$false,
         HelpMessage='Credentials for SSH connection to Brocade switch device')]
     [System.Management.Automation.PSCredential]$Credentials,
 
     [Parameter(
         Position=4,
-        Mandatory=$false,
         HelpMessage='Switch Identifiert like XX_ (Only connect to devices whose hostname starts with XX_)')]
     [String]$SwitchIdentifier,
     
@@ -66,83 +75,92 @@ param(
     [String]$ConfigToCopy
 )
 
-##################################################################################################################
-### Basic Informations to execute Script + Network Scan
-##################################################################################################################
-
-Begin{
+Begin{	
     $Script_Startup_Path = Split-Path -Parent $MyInvocation.MyCommand.Path
     $ScriptFileName = $MyInvocation.MyCommand.Name  
     $Timestamp = Get-Date -UFormat "%Y%m%d"
-
-    # Get-Credentials
+	
+	# Path to the ScanNetworkAsync.ps1-script
+	$ScanNetworkAsync_Path = "$Script_Startup_Path\ScanNetworkAsync.ps1"
+			
+    # Get-Credentials for ssh session
     if($Credentials -eq $null)
-		{		
-			try{
-				$Credentials = Get-Credential $null
-			}
-			catch{
-				Write-Host "Entering credentials was aborted. Can't connect without credentials..." -ForegroundColor Red
-				return
-			}
-	    }	
+	{		
+		try{
+			$Credentials = Get-Credential $null
+		}
+		catch{
+			Write-Host "Entering credentials was aborted. Can't connect without credentials! Exit script..." -ForegroundColor Red
+
+			exit
+		}
+	}	
     
-    # Scanning Network...
-    $NetworkScan  = Invoke-Expression -Command "$Script_Startup_Path\ScanNetworkAsync.ps1 -StartIPAddress $StartIPAddress -EndIPAddress $EndIPAddress"
+    # Check if ScanNetworkAsync.ps1 script exists
+	if(-not(Test-Path -Path $ScanNetworkAsync_Path))
+	{		
+		Write-Host "Async IP-Scanner script not found! Exit script..." -ForegroundColor Red
+		
+		exit
+	}
+	
+	# Scan network
+    $NetworkScan  = Invoke-Expression -Command "$ScanNetworkAsync_Path -StartIPAddress $StartIPAddress -EndIPAddress $EndIPAddress"
+
     if($NetworkScan -eq $null) 
     { 
-        Write-Host "No active device found! Exit script..." -ForegroundColor Red
-        exit
+		Write-Host "No devices found! Exit script..." -ForegroundColor Red
+		
+		exit
     }
-        
+		
     # Start with actual script
     $StartTime = Get-Date
     $DeviceCountSuccess = 0
     $DeviceCountFailed = 0
     
-    Write-Host "`n`nScript ($ScriptFileName) started at $StartTime`n" -ForegroundColor Green
-    
+	Write-Host "`n`nScript ($ScriptFileName) started at $StartTime`n" -ForegroundColor Green
     Write-Host "Devices found..." -ForegroundColor Yellow
-    
-    $NetworkScan
-
-    Write-Host "`nExecuting Commands on switches..." -ForegroundColor Yellow
+	$NetworkScan # Show result of the network scan
+	Write-Host "`nExecuting Commands on switches..." -ForegroundColor Yellow	
 }
 
-##################################################################################################################
-### SSH Session, Save RunningConfig to TFTP, Close Session
-##################################################################################################################
-
 Process{    
+	# Go through every active Brocade device
     foreach($Switch in ($NetworkScan | Where-Object { $_.Status -eq "Up" -and $_.Hostname.ToLower().StartsWith($SwitchIdentifier.ToLower())}))
     {
+		# Get the hostname
         try{
             $Hostname = $Switch.Hostname.Split('.')[0]
         }
 		catch{
             $Hostname = $Switch.Hostname
         }
-	    
+	    		
         Write-Host "`nDevice:`t`t`t$Hostname" -ForegroundColor Cyan
 		
 	    # Create New-BrocadeSession	
  	    $Session = New-BrocadeSession -ComputerName $Hostname -Credentials $Credentials
 
+		# Check if session could be established
         if($Session -eq $null)
         {
             $DeviceCountFailed ++
             continue
         }
 
+		# Create command
         $Command = [String]::Format("copy {0}-config tftp {1} {2}_{0}-config__{3}.bak", $ConfigToCopy.ToLower(), $TFTPServer, $Timestamp, $Hostname)
-        Write-Host "Command:`t`t$Command" -ForegroundColor Cyan
+        		
+		Write-Host "Command:`t`t$Command" -ForegroundColor Cyan
 	    Write-Host "`nStart:`tHost output" -ForegroundColor Magenta
-
+		
 	    # Execute command in session
         Invoke-BrocadeCommand -Session $Session -Command $Command -WaitTime 5000
-
+		
+		
         Write-Host "End:`tHost output" -ForegroundColor Magenta
-
+		
 	    # Close Brocade session
         Remove-BrocadeSession -Session $Session
 
@@ -152,9 +170,6 @@ Process{
     }
 }
 
-##################################################################################################################
-### Some cleanup and user output
-##################################################################################################################
 End{
     $Credentials = $null
     $EndTime = Get-Date
