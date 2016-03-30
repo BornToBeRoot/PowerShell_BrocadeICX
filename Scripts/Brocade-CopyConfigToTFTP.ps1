@@ -2,7 +2,7 @@
 # Language     :  PowerShell 4.0
 # Filename     :  Brocade-CopyConfigToTFTP.ps1
 # Autor        :  BornToBeRoot (https://github.com/BornToBeRoot)
-# Description  :  Copy startup or running config to a TFTP-Server
+# Description  :  Script to copy startup or running config to a TFTP-Server
 # Repository   :  https://github.com/BornToBeRoot/PowerShell-SSH-Brocade
 ###############################################################################################################
 
@@ -17,11 +17,13 @@
 
 <#
     .SYNOPSIS
-    Copy the running or startup configuration of all active brocade switch devices to a TFTP-Server.
+    Script to copy the running or startup config to a TFTP-Server. Useful as automatic backup using 
+	windows task.
 
     .DESCRIPTION    
     This script allowes you to scan your network (requieres ScanNetworksAsync.ps1) for all active switch devices,
     identify by the Parameter -SwitchIdentifier, and copy the startup or running configuration to a TFTP-Server.
+	Useful as automatic backup script using windows task.
 
 	Requirements:
 	- Posh-SSH (Module)
@@ -29,7 +31,7 @@
     - ScanNetworkAsync.ps1 (Script)
 
     .EXAMPLE
-    .\BrocadeConfigToTFTP.ps1 -TFTPServer 192.168.1.2 -StartIPAddress 192.168.2.100 -EndIPAddress 192.168.2.200 
+    .\Brocade-CopyConfigToTFTP.ps1 -TFTPServer 192.168.1.2 -StartIPAddress 192.168.2.100 -EndIPAddress 192.168.2.200 
     -ConfigToCopy Running
 
     .LINK
@@ -62,17 +64,17 @@ param(
         HelpMessage='Credentials for SSH connection to Brocade switch device')]
     [System.Management.Automation.PSCredential]$Credentials,
 
-    [Parameter(
+	[Parameter(
         Position=4,
-        HelpMessage='Switch Identifiert like XX_ (Only connect to devices whose hostname starts with XX_)')]
-    [String]$SwitchIdentifier,
-    
-    [Parameter(
-        Position=5,
         Mandatory=$true,
         HelpMessage='Copy startup or running config to tftp')]
     [ValidateSet('Startup', 'Running')]
-    [String]$ConfigToCopy
+    [String]$ConfigToCopy,
+
+    [Parameter(
+        Position=5,
+        HelpMessage='Switch identifier like XX_ (Only connect to devices whose hostname starts with XX_)')]
+    [String]$SwitchIdentifier
 )
 
 Begin{	
@@ -80,7 +82,7 @@ Begin{
     $ScriptFileName = $MyInvocation.MyCommand.Name  
     $Timestamp = Get-Date -UFormat "%Y%m%d"
 	
-	# Path to the ScanNetworkAsync.ps1-script
+	# Path to the ScanNetworkAsync.ps1-script (should be placed in the same directory)
 	$ScanNetworkAsync_Path = "$Script_Startup_Path\ScanNetworkAsync.ps1"
 			
     # Get-Credentials for ssh session
@@ -91,7 +93,6 @@ Begin{
 		}
 		catch{
 			Write-Host "Entering credentials was aborted. Can't connect without credentials! Exit script..." -ForegroundColor Red
-
 			exit
 		}
 	}	
@@ -100,17 +101,15 @@ Begin{
 	if(-not(Test-Path -Path $ScanNetworkAsync_Path))
 	{		
 		Write-Host "Async IP-Scanner script not found! Exit script..." -ForegroundColor Red
-		
 		exit
 	}
 	
-	# Scan network
+	# Scan IP-Range with switch devices
     $NetworkScan  = Invoke-Expression -Command "$ScanNetworkAsync_Path -StartIPAddress $StartIPAddress -EndIPAddress $EndIPAddress"
 
     if($NetworkScan -eq $null) 
     { 
 		Write-Host "No devices found! Exit script..." -ForegroundColor Red
-		
 		exit
     }
 		
@@ -146,7 +145,7 @@ Process{
         if($Session -eq $null)
         {
             $DeviceCountFailed ++
-            continue
+            continue # go to next device
         }
 
 		# Create command
@@ -155,9 +154,8 @@ Process{
 		Write-Host "Command:`t`t$Command" -ForegroundColor Cyan
 	    Write-Host "`nStart:`tHost output" -ForegroundColor Magenta
 		
-	    # Execute command in session
-        Invoke-BrocadeCommand -Session $Session -Command $Command -WaitTime 5000
-		
+	    # Execute command on switch
+        (Invoke-BrocadeCommand -Session $Session -Command $Command -WaitTime 5000).Result
 		
         Write-Host "End:`tHost output" -ForegroundColor Magenta
 		
@@ -165,16 +163,15 @@ Process{
         Remove-BrocadeSession -Session $Session
 
 	    $DeviceCountSuccess ++	
-	
-	    Start-Sleep -Seconds 1
     }
 }
 
 End{
-    $Credentials = $null
-    $EndTime = Get-Date
+	# Clear credentials (should be done by garbage collector, but better safe than sorry)
+	$Credentials = $null
     
-    # Calculate the time between Start and End
+	# Calculate the time between Start and End
+	$EndTime = Get-Date
     $ExecutionTimeMinutes = (New-TimeSpan -Start $StartTime -End $EndTime).Minutes
     $ExecutionTimeSeconds = (New-TimeSpan -Start $StartTime -End $EndTime).Seconds
 
