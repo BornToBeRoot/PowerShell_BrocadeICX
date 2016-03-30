@@ -2,7 +2,7 @@
 # Language     :  PowerShell 4.0
 # Script Name  :  Brocade.psm1
 # Autor        :  BornToBeRoot (https://github.com/BornToBeRoot)
-# Description  :  Module with functions to manage Brocade Switch devices
+# Description  : 
 # Repository   :  https://github.com/BornToBeRoot/PowerShell-SSH-Brocade
 ###############################################################################################################
 
