@@ -142,13 +142,13 @@ Get-BrocadeSession | Remove-BrocadeSession
 
 ## Additional functions of the "Brocade"-Module
 
-* [Get-BrocadeVLAN](Modules/Brocade/Get-BrocadeVLAN.ps1) - Function to get all VLANs of a Brocade switch device ([view Doku](Doku/Get-BrocadeVLAN.README.md))
-* [Add-BrocadeVLAN](Modules/Brocade/Add-BrocadeVLAN.ps1) - Function to add a new VLAN to a Brocade switch device ([view Doku](Doku/Add-BrocadeVLAN.README.md))
+* [Get-BrocadeVLAN](Modules/Brocade/Get-BrocadeVLAN.ps1) - Function to get all VLANs of a Brocade switch device ([view documentation](Documentation/Get-BrocadeVLAN.README.md))
+* [Add-BrocadeVLAN](Modules/Brocade/Add-BrocadeVLAN.ps1) - Function to add a new VLAN to a Brocade switch device ([view documentation](Documentation/Add-BrocadeVLAN.README.md))
 
 ## Available scripts
 
 * [Brocade-CopyConfigToTFTP.ps1](Scripts/Brocade-CopyConfigToTFTP.ps1) - Script to copy the running or startup config to a TFTP-Server. Useful as 
-	automatic backup using windows task. ([view Doku](Doku/Brocade-CopyConfigToTFTP.README.md))
+	automatic backup using windows task. ([view documentation](Documentation/Brocade-CopyConfigToTFTP.README.md))
 * [ScanNetworkAsync.ps1](Scripts/ScanNetworkAsync.ps1) - Powerful Asynchronus IP-Scanner for PowerShell ([view Doku](https://github.com/BornToBeRoot/PowerShell_Async-IPScanner/blob/master/README.md))
 
 ## Useful scripts
@@ -166,7 +166,7 @@ Get-BrocadeSession | Remove-BrocadeSession
 
 * Added Parameter -ShowExecutedCommand` `to function `Invoke-BrocadeCommand`
 * Added Function `Add-BrocadeVLAN`
-* Doku Improved
+* Documentation Improved
 * Function Get-BrocadeVLAN split into separate files
 
 ### 30.03.2016
