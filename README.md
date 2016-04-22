@@ -10,17 +10,6 @@ With the "Brocade"-Module you can establish a connection via SSH to one ore more
 
 I will constantly write new scripts (depends on what i/we need), to simplify tasks like backup to a TFTP-Server or to get and set VLANs.
 
-## Requirements
-
-You must have installed the following PowerShell-Module:
-
-- [Posh-SSH](https://github.com/darkoperator/Posh-SSH) by darkoperator ([latest release](https://github.com/darkoperator/Posh-SSH/releases/latest))
-
-## Tested devices (others may also work)
-
-* ICX6430-24 & ICX6430-48
-* FastIron WS 648
-
 ## Download and Install
 
 The Module can be installed like every other PowerShell-Module. If you don't know how... follow this steps:
@@ -31,6 +20,17 @@ The Module can be installed like every other PowerShell-Module. If you don't kno
 * Import the "Brocade"-Module with the command `Import-Module Brocade` (Maybe add this command to your PowerShell profile)
 
 The folder with scripts can be stored anywhere you want.
+
+## Requirements
+
+You must have installed the following PowerShell-Module:
+
+- [Posh-SSH](https://github.com/darkoperator/Posh-SSH) by darkoperator ([latest release](https://github.com/darkoperator/Posh-SSH/releases/latest))
+
+## Tested devices (others may also work)
+
+* ICX6430-24 & ICX6430-48
+* FastIron WS 648
 
 ## Syntax of the "Brocade"-Module (Basic functions)
 
