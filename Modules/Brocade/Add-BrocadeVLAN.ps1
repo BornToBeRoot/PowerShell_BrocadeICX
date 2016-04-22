@@ -151,7 +151,7 @@ function Add-BrocadeVLAN
 			return 
         }
 
-		# Check if Brocde 
+		# Check if VLAN already exists
 		if((Get-BrocadeVLAN -Session $Session).Id -contains $VlanId)
 		{
 			Write-Host "VLAN $VlanId vorhanden" -ForegroundColor Red
