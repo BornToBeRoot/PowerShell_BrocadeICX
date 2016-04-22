@@ -27,13 +27,15 @@ The Module can be installed like every other PowerShell-Module. If you don't kno
 
 * Download the latest version of the module and all scripts from GitHub ([latest release](https://github.com/BornToBeRoot/PowerShell-SSH-Brocade/releases/latest))
 * Copy the folder `Module\Brocade` in your profile under `C:\Users\%username%\Documents\WindowsPowerShell\Modules`
-* Open a PowerShell-Console and import the "Brocade"-Module with the command `Import-Module Brocade`
+* Open up a PowerShell as an admin and set the execution policy: `Set-ExecutionPolicy RemoteSigned`
+* Import the "Brocade"-Module with the command `Import-Module Brocade` (Maybe add this command to your PowerShell profile)
 
 The folder with scripts can be stored anywhere you want.
 
-## Syntax (with examples) of the "Brocade"-Module
+## Syntax of the "Brocade"-Module (Basic functions)
 
-The following commands are available in the "Brocade"-Module. You can also use `Get-Help BROCADECOMMAND -Full` to get the syntax and examples.
+The following basic commands are available in the "Brocade"-Module. 
+You can also use `Get-Help BROCADECOMMAND -Full` for each command to get the syntax and examples.
 
 ### New-BrocadeSession
 
@@ -41,9 +43,11 @@ The following commands are available in the "Brocade"-Module. You can also use `
 New-BrocadeSession [-ComputerName] <String[]> [[-Credentials] <PSCredential>] [<CommonParameters>]
 ```
 
-```PowerShell
-> New-BrocadeSession -ComputerName TEST_DEVICE1
+Example 1:
 
+```PowerShell
+New-BrocadeSession -ComputerName TEST_DEVICE1
+```
 
 SessionID ComputerName Session        Stream
 --------- ------------ -------        ------
@@ -58,17 +62,23 @@ Get-BrocadeSession [[-SessionID] <Int32[]>] [<CommonParameters>]
 Get-BrocadeSession [[-ComputerName] <String[]>] [[-ExactMatch]] [<CommonParameters>]
 ```
 
+Example 1:
+
 ```powershell
-> Get-BrocadeSession -SessionID 0,2
+Get-BrocadeSession -SessionID 0,2
+```
 
-
+```
 SessionID ComputerName Session        Stream
 --------- ------------ -------        ------
         0 TEST_DEVICE1 SSH.SshSession Renci.SshNet.ShellStream
 	    2 TEST_DEVICE3 SSH.SshSession Renci.SshNet.ShellStream
+```
 
+Example 2:
 
-> Get-BrocadeSession -ComputerName *TEST*
+```powershell
+Get-BrocadeSession -ComputerName *TEST*
 
 SessionID ComputerName Session        Stream
 --------- ------------ -------        ------
@@ -80,22 +90,30 @@ SessionID ComputerName Session        Stream
 ### Invoke-BrocadeCommand
 
 ```powershell
-Invoke-BrocadeCommand [-Session] <PSObject[]> [-Command] <String> [[-WaitTime] <Int32>] [<CommonParameters>]
+Invoke-BrocadeCommand [-Session] <PSObject[]> [-Command] <String> [[-WaitTime] <Int32>] [[-ShowExecutedCommand]] [<CommonParameters>]
 
 Invoke-BrocadeCommand [-SessionID] <Int32[]> [-Command] <String> [[-WaitTime] <Int32>] [<CommonParameters>]
 ```
 
+Example 1:
+
 ```powershell
-> Invoke-BrocadeCommand -SessionID 0 -Command "sh clock" -WaitTime 500
+Invoke-BrocadeCommand -SessionID 0 -Command "sh clock" -WaitTime 500
+```
 
-
+```
 ComputerName Result
 ------------ ------
 TEST_DEVICE1 {sh clock, 16:55:07 GMT+01 Wed Mar 30 2016, SSH@TEST_DEVICE1#}
+```
 
+Example 2:
 
-> (Get-BrocadeSession | Invoke-BrocadeCommand -Command "sh clock" -WaitTime 500).Result
+```powershell
+(Get-BrocadeSession | Invoke-BrocadeCommand -Command "sh clock" -WaitTime 500).Result
+```
 
+```
 sh clock
 16:56:48 GMT+01 Wed Mar 30 2016
 SSH@TEST_DEVICE1#
@@ -109,18 +127,43 @@ Remove-BrocadeSession [-Session] <PSObject[]> [<CommonParameters>]
 Remove-BrocadeSession [-SessionID] <Int32[]> [<CommonParameters>]
 ```
 
-```powershell
-> Remove-BrocadeSession -SessionID 0
+Example 1:
 
-> Get-BrocadeSession | Remove-BrocadeSession
+```powershell
+Remove-BrocadeSession -SessionID 0
 ``` 
+
+Example 2:
+
+```powershell
+Get-BrocadeSession | Remove-BrocadeSession
+```
+
+## Additional functions of the "Brocade"-Module
+
+* [Get-BrocadeVLAN](Modules/Brocade/Get-BrocadeVLAN.ps1) - Function to get all VLANs of a Brocade switch device ([view Doku](Doku/Get-BrocadeVLAN.README.md))
+* [Add-BrocadeVLAN](Modules/Brocade/Add-BrocadeVLAN.ps1) - Function to add a new VLAN to a Brocade switch device ([view Doku](Doku/Add-BrocadeVLAN.README.md))
 
 ## Available scripts
 
 * [Brocade-CopyConfigToTFTP.ps1](Scripts/Brocade-CopyConfigToTFTP.ps1) - Script to copy the running or startup config to a TFTP-Server. Useful as 
-	automatic backup using windows task. ([view Doku](Scripts/Brocade-CopyConfigToTFTP.README.md))
+	automatic backup using windows task. ([view Doku](Doku/Brocade-CopyConfigToTFTP.README.md))
+* [ScanNetworkAsync.ps1](Scripts/ScanNetworkAsync.ps1) - Powerful Asynchronus IP-Scanner for PowerShell ([view Doku](https://github.com/BornToBeRoot/PowerShell_Async-IPScanner/blob/master/README.md))
+
+## Useful scripts
+
+* [Manage-Credentials](Scripts/Manage-Credentials.ps1) - Script to Encrypt/Decrypt Credentials (Username and Password) and save them as variable or xml-file using SecureStrings ([view Doku](https://github.com/BornToBeRoot/PowerShell_Manage-Credentials/blob/master/README.md))
+
+## ToDo
+[] Remove-BrocadeVLAN
+[] Set/Edit-BrocadeVLAN
 
 ## ChangeLog
+
+### 22.04.2016
+* Added Parameter -ShowExecutedCommand` `to function `Invoke-BrocadeCommand`
+* Added Function `Add-BrocadeVLAN`
+* Doku Improved
 
 ### 30.03.2016
 * Code improved
