@@ -149,11 +149,11 @@ Get-BrocadeSession | Remove-BrocadeSession
 
 * [Brocade-CopyConfigToTFTP.ps1](Scripts/Brocade-CopyConfigToTFTP.ps1) - Script to copy the running or startup config to a TFTP-Server. Useful as 
 	automatic backup using windows task. ([view documentation](Documentation/Brocade-CopyConfigToTFTP.README.md))
-* [ScanNetworkAsync.ps1](Scripts/ScanNetworkAsync.ps1) - Powerful Asynchronus IP-Scanner for PowerShell ([view Doku](https://github.com/BornToBeRoot/PowerShell_Async-IPScanner/blob/master/README.md))
+* [ScanNetworkAsync.ps1](Scripts/ScanNetworkAsync.ps1) - Powerful Asynchronus IP-Scanner for PowerShell ([view documentation](https://github.com/BornToBeRoot/PowerShell_Async-IPScanner/blob/master/README.md))
 
 ## Useful scripts
 
-* [Manage-Credentials](Scripts/Manage-Credentials.ps1) - Script to Encrypt/Decrypt Credentials (Username and Password) and save them as variable or xml-file using SecureStrings ([view Doku](https://github.com/BornToBeRoot/PowerShell_Manage-Credentials/blob/master/README.md))
+* [Manage-Credentials](Scripts/Manage-Credentials.ps1) - Script to Encrypt/Decrypt Credentials (Username and Password) and save them as variable or xml-file using SecureStrings ([view documentation](https://github.com/BornToBeRoot/PowerShell_Manage-Credentials/blob/master/README.md))
 
 ## ToDo
 
