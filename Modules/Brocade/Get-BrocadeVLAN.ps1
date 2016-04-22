@@ -3,7 +3,7 @@
 # Script Name  :  Get-BrocadeVLAN.ps1
 # Autor        :  BornToBeRoot (https://github.com/BornToBeRoot)
 # Description  :  Function to get all VLANs of the Brocade switch device
-# Repository   :  https://github.com/BornToBeRoot/PowerShell-SSH-Brocade
+# Repository   :  https://github.com/BornToBeRoot/PowerShell_SSH-Brocade
 ###############################################################################################################
 
 <#
@@ -25,7 +25,7 @@
     
     .LINK    
     Github Profil:         https://github.com/BornToBeRoot
-    Github Repository:     https://github.com/BornToBeRoot/PowerShell-SSH-Brocade
+    Github Repository:     https://github.com/BornToBeRoot/PowerShell_SSH-Brocade
 #>
 function Get-BrocadeVLAN 
 {
