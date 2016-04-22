@@ -49,6 +49,7 @@ Example 1:
 New-BrocadeSession -ComputerName TEST_DEVICE1
 ```
 
+```
 SessionID ComputerName Session        Stream
 --------- ------------ -------        ------
         0 TEST_DEVICE1 SSH.SshSession Renci.SshNet.ShellStream
