@@ -167,6 +167,7 @@ Get-BrocadeSession | Remove-BrocadeSession
 * Added Parameter -ShowExecutedCommand` `to function `Invoke-BrocadeCommand`
 * Added Function `Add-BrocadeVLAN`
 * Doku Improved
+* Function Get-BrocadeVLAN split into separate files
 
 ### 30.03.2016
 
