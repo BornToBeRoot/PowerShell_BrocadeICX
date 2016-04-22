@@ -138,7 +138,7 @@ Process{
 	    		
         Write-Host "`nDevice:`t`t`t$Hostname" -ForegroundColor Cyan
 		
-	    # Create New-BrocadeSession	
+	    # Create a new Brocade session	
  	    $Session = New-BrocadeSession -ComputerName $Hostname -Credentials $Credentials
 
 		# Check if session could be established
