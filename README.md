@@ -43,7 +43,7 @@ You can also use `Get-Help BROCADECOMMAND -Full` for each command to get the syn
 New-BrocadeSession [-ComputerName] <String[]> [[-Credentials] <PSCredential>] [<CommonParameters>]
 ```
 
-Example 1:
+**Example 1:**
 
 ```PowerShell
 New-BrocadeSession -ComputerName TEST_DEVICE1
@@ -63,7 +63,7 @@ Get-BrocadeSession [[-SessionID] <Int32[]>] [<CommonParameters>]
 Get-BrocadeSession [[-ComputerName] <String[]>] [[-ExactMatch]] [<CommonParameters>]
 ```
 
-Example 1:
+**Example 1:**
 
 ```powershell
 Get-BrocadeSession -SessionID 0,2
@@ -76,7 +76,7 @@ SessionID ComputerName Session        Stream
 	    2 TEST_DEVICE3 SSH.SshSession Renci.SshNet.ShellStream
 ```
 
-Example 2:
+**Example 2:**
 
 ```powershell
 Get-BrocadeSession -ComputerName *TEST*
@@ -96,7 +96,7 @@ Invoke-BrocadeCommand [-Session] <PSObject[]> [-Command] <String> [[-WaitTime] <
 Invoke-BrocadeCommand [-SessionID] <Int32[]> [-Command] <String> [[-WaitTime] <Int32>] [<CommonParameters>]
 ```
 
-Example 1:
+**Example 1:**
 
 ```powershell
 Invoke-BrocadeCommand -SessionID 0 -Command "sh clock" -WaitTime 500
@@ -108,7 +108,7 @@ ComputerName Result
 TEST_DEVICE1 {sh clock, 16:55:07 GMT+01 Wed Mar 30 2016, SSH@TEST_DEVICE1#}
 ```
 
-Example 2:
+**Example 2:**
 
 ```powershell
 (Get-BrocadeSession | Invoke-BrocadeCommand -Command "sh clock" -WaitTime 500).Result
@@ -128,13 +128,13 @@ Remove-BrocadeSession [-Session] <PSObject[]> [<CommonParameters>]
 Remove-BrocadeSession [-SessionID] <Int32[]> [<CommonParameters>]
 ```
 
-Example 1:
+**Example 1:**
 
 ```powershell
 Remove-BrocadeSession -SessionID 0
 ``` 
 
-Example 2:
+**Example 2:**
 
 ```powershell
 Get-BrocadeSession | Remove-BrocadeSession
@@ -156,22 +156,26 @@ Get-BrocadeSession | Remove-BrocadeSession
 * [Manage-Credentials](Scripts/Manage-Credentials.ps1) - Script to Encrypt/Decrypt Credentials (Username and Password) and save them as variable or xml-file using SecureStrings ([view Doku](https://github.com/BornToBeRoot/PowerShell_Manage-Credentials/blob/master/README.md))
 
 ## ToDo
-[] Remove-BrocadeVLAN
-[] Set/Edit-BrocadeVLAN
+
+* Remove-BrocadeVLAN
+* Set/Edit-BrocadeVLAN
 
 ## ChangeLog
 
 ### 22.04.2016
+
 * Added Parameter -ShowExecutedCommand` `to function `Invoke-BrocadeCommand`
 * Added Function `Add-BrocadeVLAN`
 * Doku Improved
 
 ### 30.03.2016
+
 * Code improved
 * Output of `Invoke-BrocadeCommand` changed --> Now returns a custom PSObject with ComputerName and Result
 * Manage-Credentials.ps1 and ScanNetworkAsync.ps1 updated
 
 ### 12.02.2016
+
 * Added Get-BrocadeVLAN Cmdlets in "Brocade"-Module
 * Script and Module Improved
 * Added Brocade-CopyConfigToTFTP.ps1 to scripts (Copy Running-/Starup-Config to a TFTP-Server) - Removed old RunningConfigToTFTP.ps1 from scripts
