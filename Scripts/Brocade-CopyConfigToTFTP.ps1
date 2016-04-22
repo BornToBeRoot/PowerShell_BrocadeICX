@@ -3,7 +3,7 @@
 # Filename     :  Brocade-CopyConfigToTFTP.ps1
 # Autor        :  BornToBeRoot (https://github.com/BornToBeRoot)
 # Description  :  Script to copy startup or running config to a TFTP-Server
-# Repository   :  https://github.com/BornToBeRoot/PowerShell-SSH-Brocade
+# Repository   :  https://github.com/BornToBeRoot/PowerShell_SSH-Brocade
 ###############################################################################################################
 
 
@@ -35,7 +35,7 @@
     -ConfigToCopy Running
 
     .LINK
-    https://github.com/BornToBeRoot/PowerShell-SSH-Brocade
+    https://github.com/BornToBeRoot/PowerShell_SSH-Brocade
     https://github.com/BornToBeRoot
 #>
 
