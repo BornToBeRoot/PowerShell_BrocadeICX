@@ -100,6 +100,7 @@ function Get-ICXSession
                     }
                 }
             }
+
             "ComputerName" {
                 Write-Verbose -Message "Filter Brocade ICX sessions using the ComputerName."
 
@@ -114,6 +115,7 @@ function Get-ICXSession
                     }
                 }
             }
+            
             "Search" {
                 Write-Verbose -Message "Filter Brocade ICX sessions using the ComputerName. Placeholder like ""*"" will be considered."
                 
@@ -125,6 +127,7 @@ function Get-ICXSession
                     }
                 }
             }
+            
             default {
                 Write-Verbose -Message "No Filter used. Return all Brocade ICX sessions."
 

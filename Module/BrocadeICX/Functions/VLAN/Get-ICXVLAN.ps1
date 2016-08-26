@@ -272,6 +272,7 @@ function Get-ICXVLAN
                 }
                 
             }
+            
             "Session" {
                 foreach($Session2 in $Session)
                 {
