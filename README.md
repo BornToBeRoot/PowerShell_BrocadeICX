@@ -28,6 +28,7 @@ I will constantly write new scripts (depends on what i/we need), to simplify tas
 | [New-ICXSession](Module/BrocadeICX/Core/New-ICXSession.ps1) | Core | Create a new Brocade ICX sessions over SSH | [:book:](Documentation/Function/New-ICXSession.README.md) |
 | [Remove-ICXSession](Module/BrocadeICX/Core/Remove-ICXSession.ps1) | Core | Remove a Brocade ICX session | [:book:](Documentation/Function/Remove-ICXSession.README.md) |
 | [Test-ICXSession](Module/BrocadeICX/Core/Test-ICXSession.ps1) | Core | Test if a session is a valid Brocade ICX session | [:book:](Documentation/Function/Test-ICXSession.README.md) |
+| [Get-ICXVLAN](Module/BrocadeICX/Functions/VLAN/Get-ICXVLAN.ps1) | VLAN | Get VLAN from a Brocade ICX Switch | [:book:](Documentation/Function/Get-ICXVLAN.README.md) |
 
 ## Scripts
 
