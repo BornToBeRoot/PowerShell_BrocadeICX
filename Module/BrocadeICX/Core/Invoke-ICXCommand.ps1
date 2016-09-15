@@ -117,176 +117,175 @@ function Invoke-ICXCommand
             Write-Verbose -Message "Current session: $Session2"
 
             # Check if session is a valid Brocade ICX session and managed by this module
-            if(Test-ICXSession -Session $Session2)
+            if(-not(Test-ICXSession -Session $Session2))
             {
-                # Try to write the SSH command in the SSH shell stream
-                try{
-                    Write-Verbose -Message "Write SSH command ""$OriginalSSHCommand"" in the SSH shell stream..."
-                    $Session2.Stream.Write($Command)
-                }
-                catch{
-                    if($_.Exception.Message.Split(':')[1].Trim() -eq '"Client not connected."')
-                    {
-                        Write-Error -Message "Client ""$($Session2.ComputerName)"" (Session: $Session2)) no longer connected! SSH command can not be executed! The session will be removed from the global Brocade ICX sessions." -Category ConnectionError
-                        
-                        # Sessions are removed at the end, to prevent an enumeration error
-                        $BadICXSessions += $Session2  
-                    }
-                    else 
-                    {
-                        Write-Error -Message "Client ""$($Session2.ComputerName)"" (Session: $Session2): $($_.Exception.Message)" -Category ConnectionError
-                    }
-
-                    continue
-                }
-
-                # Temporary output as array, which is returned from ssh shell stream
-                $TemporaryOutput = @()
-
-                # The last line of the output "normally" contains SSH@HOSTNAME> or SSH@HOSTNAME# or SSH@HOSTNAME(config)#
-                $RegexSSHatHostname = "(SSH@){1}[0-9A-Z_-]+([(]{1}(config){1}[)]{1})*(>|#){1}"
-
-                # Auto detect output or wait a specific time (compatibility mode)...
-                if($PSCmdlet.ParameterSetName -eq 'AutoDetectOutput')
+                 Write-Error -Message "Session ($Session2) is not a valid Brocade ICX session or not managed by the BrocadeICX module!" -Category ConnectionError
+                 continue
+            }
+                
+            # Try to write the SSH command in the SSH shell stream
+            try{
+                Write-Verbose -Message "Write SSH command ""$OriginalSSHCommand"" in the SSH shell stream..."
+                $Session2.Stream.Write($Command)
+            }
+            catch{
+                if($_.Exception.Message.Split(':')[1].Trim() -eq '"Client not connected."')
                 {
-                    # Validate that the stream was read to the end
-                    $SSHCommandFoundInOutput = $false
-                    $OutputIsComplete = $false                                          
-
-                    # Timeout
-                    $TimeoutStartTime = Get-Date
-                    $TimeoutHasReached = $false
-                                            
-                    do{         
-                        # Check if timeout is reached, if yes... go the last time through the loop
-                        if((New-TimeSpan -Start $TimeoutStartTime -End (Get-Date)).TotalMilliseconds -gt $TimeoutMilliseconds)
-                        {
-                            
-                            Write-Warning -Message "Timeout ($Timeout seconds) was reached! Output may not complete.`nIf you have problems with this command. Try out the compatibility mode. Use Get-Help for more details!"
-                            $TimeoutHasReached = $true
-                        }
-                        else  
-                        {   
-                            # Wait for new output                        
-                            Write-Verbose -Message "Wait 250 Milliseconds."
-                            Start-Sleep -Milliseconds 250    
-                        }                        
-
-                        # Get the output and split lines into an array
-                        $Stream_Read = $Session2.Stream.Read() -split '[\n]' | Where-Object {$_}
-
-                        # Check if output is not null
-                        if($Stream_Read -ne $null)
-                        {
-                            Write-Verbose -Message "Process received output..."
-
-                            # Go through each line
-                            foreach($Line in $Stream_Read)
-                            {                                    
-                                # Add only the output after the SSH command 
-                                if(-not($SSHCommandFoundInOutput))
-                                {
-                                    # If the command was found... we can start building the output! (Use like because the line sometimes starts with "SSH@HOSTNAME#" or "SSH@HOSTNAME(config)#")
-                                    if($Line -like "*$OriginalSSHCommand*")
-                                    {   
-                                        Write-Verbose -Message "SSH command ""$OriginalSSHCommand"" was found in line."
-                                        $SSHCommandFoundInOutput = $true
-                                    }                                   
-                                }                                
-                                else 
-                                {
-                                    # Check if custom end string is used and is present in the current line
-                                    if($PSBoundParameters.ContainsKey('EndString'))
-                                    {                                    
-                                        foreach($EndString2 in $EndString)
-                                        {
-                                            if($Line -like "*$EndString2*")
-                                            {
-                                                Write-Verbose -Message "Output is complete! ""$EndString2"" was found in line: $Line"
-                                                $OutputIsComplete = $true
-                                            }
-                                        }
-                                    } # Check if line match regex ("SSH@HOSTNAME>" or "SSH@HOSTNAME#" or "SSH@HOSTNAME(config)#"), if so, we have reached the end of the shell stream
-                                    elseif($Line -match $RegexSSHatHostname)
-                                    {
-                                        Write-Verbose -Message "Output is complete!"
-                                        $OutputIsComplete = $true
-	                                }
-
-                                    $TemporaryOutput += $Line                                      
-                                }                            
-                            }
-                        }
-                        else
-                        {
-                            Write-Verbose -Message "No output received."
-                        }                        
-                    }while(($OutputIsComplete -eq $false) -and ($TimeoutHasReached -eq $false))                                    
+                    Write-Error -Message "Client ""$($Session2.ComputerName)"" (Session: $Session2)) no longer connected! SSH command can not be executed! The session will be removed from the global Brocade ICX sessions." -Category ConnectionError
+                    
+                    # Sessions are removed at the end, to prevent an enumeration error
+                    $BadICXSessions += $Session2  
                 }
                 else 
                 {
-                    Write-Verbose -Message "Compatibility mode enabled." 
-
-                    if($PSCmdlet.ParameterSetName -eq "CompatibilityMode_Seconds")
-                    {
-                        $Milliseconds = $Seconds * 1000
-                    }
-
-                    Start-Sleep -Milliseconds $Milliseconds
-
-                    $TemporaryOutput += $Session2.Stream.Read() -split '[\n]' | Where-Object {$_}
-                }
-                
-                Write-Verbose -Message "Prepare output..."
-
-                # Output as array, which is returned
-                $Output = @()
-
-                # Process the output - replace SSH command and SSH@HOSTNAME#
-                foreach($Line in $TemporaryOutput)
-                {
-                    $Output += $Line -replace $OriginalSSHCommand, "" -replace $RegexSSHatHostname, ""
+                    Write-Error -Message "Client ""$($Session2.ComputerName)"" (Session: $Session2): $($_.Exception.Message)" -Category ConnectionError
                 }
 
-                $IndexStart = 0
-                $IndexEnd = $Output.Length -1
+                continue
+            }
 
-                # Get the index of the first item with content
-                for($i = 0; $i -lt $IndexEnd; $i++)
-                {                    
-                    if($Output[$i] -match '[\S]')
-                    {
-                        Write-Verbose -Message "Index of the first item with content: $i"
-                        $IndexStart = $i
-                        break
-                    }
-                }
+            # Temporary output as array, which is returned from ssh shell stream
+            $TemporaryOutput = @()
 
-                # Get the index of the last item with content
-                for($j = $IndexEnd; $j -gt $IndexStart; $j--)
-                {
-                    if($Output[$j] -match '[\S]')
-                    {
-                        Write-Verbose -Message "Index of the last item with content: $j"
-                        $IndexEnd = $j
-                        break 
-                    }
-                }
+            # The last line of the output "normally" contains SSH@HOSTNAME> or SSH@HOSTNAME# or SSH@HOSTNAME(config)#
+            $RegexSSHatHostname = "(SSH@){1}[0-9A-Z_-]+([(]{1}(config){1}[)]{1})*(>|#){1}"
 
-                # Build a new array without the empty items at start and end
-                $Output = $Output[$IndexStart..$IndexEnd]
-
-                # Build the PSCustomObject and return it
-                [pscustomobject] @{
-                    SessionID = $Session2.SessionID
-                    ComputerName = $Session2.ComputerName
-                    Output = $Output
-                }
-            }            
-            else
+            # Auto detect output or wait a specific time (compatibility mode)...
+            if($PSCmdlet.ParameterSetName -eq 'AutoDetectOutput')
             {
-                Write-Error -Message "Session ($Session2) is not a valid Brocade ICX session or not managed by the BrocadeICX module!" -Category ConnectionError
-            } 
+                # Validate that the stream was read to the end
+                $SSHCommandFoundInOutput = $false
+                $OutputIsComplete = $false                                          
+
+                # Timeout
+                $TimeoutStartTime = Get-Date
+                $TimeoutHasReached = $false
+                                        
+                do{         
+                    # Check if timeout is reached, if yes... go the last time through the loop
+                    if((New-TimeSpan -Start $TimeoutStartTime -End (Get-Date)).TotalMilliseconds -gt $TimeoutMilliseconds)
+                    {
+                        
+                        Write-Warning -Message "Timeout ($Timeout seconds) was reached! Output may not complete. If you have problems with this command. Try out the compatibility mode. Use Get-Help for more details!"
+                        $TimeoutHasReached = $true
+                    }
+                    else  
+                    {   
+                        # Wait for new output                        
+                        Write-Verbose -Message "Wait 250 Milliseconds."
+                        Start-Sleep -Milliseconds 250    
+                    }                        
+
+                    # Get the output and split lines into an array
+                    $Stream_Read = $Session2.Stream.Read() -split '[\n]' | Where-Object {$_}
+
+                    # Check if output is not null
+                    if($Stream_Read -ne $null)
+                    {
+                        Write-Verbose -Message "Process received output..."
+
+                        # Go through each line
+                        foreach($Line in $Stream_Read)
+                        {                                    
+                            # Add only the output after the SSH command 
+                            if(-not($SSHCommandFoundInOutput))
+                            {
+                                # If the command was found... we can start building the output! (Use like because the line sometimes starts with "SSH@HOSTNAME#" or "SSH@HOSTNAME(config)#")
+                                if($Line -like "*$OriginalSSHCommand*")
+                                {   
+                                    Write-Verbose -Message "SSH command ""$OriginalSSHCommand"" was found in line."
+                                    $SSHCommandFoundInOutput = $true
+                                }                                   
+                            }                                
+                            else 
+                            {
+                                # Check if custom end string is used and is present in the current line
+                                if($PSBoundParameters.ContainsKey('EndString'))
+                                {                                    
+                                    foreach($EndString2 in $EndString)
+                                    {
+                                        if($Line -like "*$EndString2*")
+                                        {
+                                            Write-Verbose -Message "Output is complete! ""$EndString2"" was found in line: $Line"
+                                            $OutputIsComplete = $true
+                                        }
+                                    }
+                                } # Check if line match regex ("SSH@HOSTNAME>" or "SSH@HOSTNAME#" or "SSH@HOSTNAME(config)#"), if so, we have reached the end of the shell stream
+                                elseif($Line -match $RegexSSHatHostname)
+                                {
+                                    Write-Verbose -Message "Output is complete!"
+                                    $OutputIsComplete = $true
+                                }
+
+                                $TemporaryOutput += $Line                                      
+                            }                            
+                        }
+                    }
+                    else
+                    {
+                        Write-Verbose -Message "No output received."
+                    }                        
+                }while(($OutputIsComplete -eq $false) -and ($TimeoutHasReached -eq $false))                                    
+            }
+            else 
+            {
+                Write-Verbose -Message "Compatibility mode enabled." 
+
+                if($PSCmdlet.ParameterSetName -eq "CompatibilityMode_Seconds")
+                {
+                    $Milliseconds = $Seconds * 1000
+                }
+
+                Start-Sleep -Milliseconds $Milliseconds
+
+                $TemporaryOutput += $Session2.Stream.Read() -split '[\n]' | Where-Object {$_}
+            }
+            
+            Write-Verbose -Message "Prepare output..."
+
+            # Output as array, which is returned
+            $Output = @()
+
+            # Process the output - replace SSH command and SSH@HOSTNAME#
+            foreach($Line in $TemporaryOutput)
+            {
+                $Output += $Line -replace $OriginalSSHCommand, "" -replace $RegexSSHatHostname, ""
+            }
+
+            $IndexStart = 0
+            $IndexEnd = $Output.Length -1
+
+            # Get the index of the first item with content
+            for($i = 0; $i -lt $IndexEnd; $i++)
+            {                    
+                if($Output[$i] -match '[\S]')
+                {
+                    Write-Verbose -Message "Index of the first item with content: $i"
+                    $IndexStart = $i
+                    break
+                }
+            }
+
+            # Get the index of the last item with content
+            for($j = $IndexEnd; $j -gt $IndexStart; $j--)
+            {
+                if($Output[$j] -match '[\S]')
+                {
+                    Write-Verbose -Message "Index of the last item with content: $j"
+                    $IndexEnd = $j
+                    break 
+                }
+            }
+
+            # Build a new array without the empty items at start and end
+            $Output = $Output[$IndexStart..$IndexEnd]
+
+            # Build the PSCustomObject and return it
+            [pscustomobject] @{
+                SessionID = $Session2.SessionID
+                ComputerName = $Session2.ComputerName
+                Output = $Output
+            }
         }
 
         if($BadICXSessions.Count -gt 0)
