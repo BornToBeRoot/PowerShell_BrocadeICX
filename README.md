@@ -44,7 +44,7 @@ I will constantly write new scripts (depends on what i/we need), to simplify tas
 ## Requirements
 
 * PowerShell 4.0
-* [Posh-SSH](https://github.com/darkoperator/Posh-SSH) by darkoperator to establish a SSH connection ([latest release](https://github.com/darkoperator/Posh-SSH/releases/latest)).
+* [Posh-SSH](https://github.com/darkoperator/Posh-SSH) by darkoperator to establish an SSH connection ([latest release](https://github.com/darkoperator/Posh-SSH/releases/latest)).
 
 ## Supported devices (others may also work)
 

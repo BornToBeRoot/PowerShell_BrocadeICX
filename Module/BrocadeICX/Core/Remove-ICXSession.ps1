@@ -75,9 +75,11 @@ function Remove-ICXSession
             "SessionID" {   
                 $ICXSessions2Remove += Get-ICXSession -SessionID $SessionID
             }
+
             "ComputerName"{                
                 $ICXSessions2Remove += Get-ICXSession -ComputerName $ComputerName -CaseSensitive:$CaseSensitive
-            }          
+            }
+
             "Session" {                
                 foreach($Session2 in $Session)
                 {
