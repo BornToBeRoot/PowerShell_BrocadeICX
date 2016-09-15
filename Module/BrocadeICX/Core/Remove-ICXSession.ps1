@@ -22,9 +22,6 @@
     .EXAMPLE
     Remove-ICXSession -ComputerName megatron
     
-    .EXAMPLE
-    Remove-ICXSession -Search *mega*
-
     .LINK
     https://github.com/BornToBeRoot/PowerShell_BrocadeICX/Documentation/Function/Remove-ICXSession.README.md
 #>
@@ -56,13 +53,6 @@ function Remove-ICXSession
         [switch]$CaseSensitive,
 
         [Parameter(
-            ParameterSetName='Search',
-            Position=0,
-            Mandatory=$true,
-            HelpMessage='Search with wildcard (like "*")')]
-        [String]$Search,
-
-        [Parameter(
             ParameterSetName='Session',
             Position=0,
             ValueFromPipeline=$true,
@@ -87,10 +77,7 @@ function Remove-ICXSession
             }
             "ComputerName"{                
                 $ICXSessions2Remove += Get-ICXSession -ComputerName $ComputerName -CaseSensitive:$CaseSensitive
-            }
-            "Search"{
-                $ICXSessions2Remove += Get-ICXSession -Search $Search
-            }
+            }          
             "Session" {                
                 foreach($Session2 in $Session)
                 {

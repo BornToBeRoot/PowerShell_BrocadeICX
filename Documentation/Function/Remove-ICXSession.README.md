@@ -17,8 +17,6 @@ Remove-ICXSession [-SessionID] <Int32[]> [<CommonParameters>]
 
 Remove-ICXSession [-ComputerName] <String[]> [[-CaseSensitive]] [<CommonParameters>]
 
-Remove-ICXSession [-Search] <String> [<CommonParameters>]
-
 Remove-ICXSession [-Session] <PSObject[]> [<CommonParameters>]
 ```
 
@@ -37,10 +35,4 @@ PS> Get-ICXSession | Remove-ICXSession
 ## Example 3
 ```powershell
 PS> Remove-ICXSession -ComputerName megatron
-```
-
-## Example 4
-
-```powershell
-PS> Remove-ICXSession -Search *mega*
 ```
