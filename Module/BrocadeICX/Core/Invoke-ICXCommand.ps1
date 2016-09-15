@@ -8,10 +8,10 @@
 
 <#
     .SYNOPSIS
-    Invoke an SSH command in a Brocade ICX sessions
+    Invoke an SSH command in a Brocade ICX session
 
     .DESCRIPTION
-    Invoke an SSH command into one or multiple Brocade ICX sessions. By default, the function will try to detect the SSH output automatically based on the first and last string. Normally the output starts with the SSH command (which was passed) and ends with SSH@HOSTNAME#. If the automatic detection fails and the timeout is reached, the output which is currently in the SSH stream will be returned. 
+    Invoke an SSH command into one or multiple Brocade ICX session(s). By default, the function will try to detect the SSH output automatically based on the first and last string. Normally the output starts with the SSH command (which was passed) and ends with SSH@HOSTNAME#. If the automatic detection fails and the timeout is reached, the output which is currently in the SSH stream will be returned. 
     
     If you have trouble with some commands (such as "copy running-config tftp ...""), you should try the compatibility mode (-CompatibilityMode) and define your own timout values (-Seconds or -Milliseconds). With the compatibility mode, the SSH command ist executed and the output of the SSH stream is returned after a specific time.
 
