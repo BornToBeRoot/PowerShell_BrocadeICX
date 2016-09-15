@@ -29,16 +29,7 @@
             0 megatron     SSH.SshSession Renci.SshNet.ShellStream
             1 megatron     SSH.SshSession Renci.SshNet.ShellStream
             2 megatron     SSH.SshSession Renci.SshNet.ShellStream
-
-    .EXAMPLE
-    Get-ICXSession -Search *mega*
-
-    SessionID ComputerName Session        Stream
-    --------- ------------ -------        ------
-            0 megatron     SSH.SshSession Renci.SshNet.ShellStream
-            1 megatron     SSH.SshSession Renci.SshNet.ShellStream
-            2 megatron     SSH.SshSession Renci.SshNet.ShellStream
-
+   
     .LINK
     https://github.com/BornToBeRoot/PowerShell_BrocadeICX/Documentation/Function/Get-ICXSession.README.md
 #>
@@ -65,14 +56,7 @@ function Get-ICXSession
             ParameterSetName='ComputerName',
             Position=1,
             HelpMessage='ComputerName must match exactly')]
-        [switch]$CaseSensitive,
-
-        [Parameter(
-            ParameterSetName='Search',
-            Position=0,
-            Mandatory=$true,
-            HelpMessage='Search with wildcard (like "*")')]
-        [String]$Search
+        [switch]$CaseSensitive     
     )
 
     Begin{
@@ -111,17 +95,6 @@ function Get-ICXSession
                         {
                             $ICXSessions += $ICXSession
                         }
-                    }
-                }
-            }
-            "Search" {
-                Write-Verbose -Message "Filter Brocade ICX sessions using the ComputerName. Placeholder like ""*"" will be considered."
-                
-                foreach($ICXSession in $Global:BrocadeICXSessions)
-                {
-                    if($ICXSession.ComputerName -like $Search)
-                    {
-                        $ICXSessions += $ICXSession
                     }
                 }
             }

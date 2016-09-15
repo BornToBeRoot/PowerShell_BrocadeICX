@@ -18,8 +18,6 @@ Get-ICXSession [<CommonParameters>]
 Get-ICXSession [-SessionID] <Int32[]> [<CommonParameters>]
 
 Get-ICXSession [-ComputerName] <String[]> [[-CaseSensitive]] [<CommonParameters>]
-
-Get-ICXSession [-Search] <String> [<CommonParameters>]
 ```
 
 ## Example 1
@@ -37,18 +35,6 @@ SessionID ComputerName Session        Stream
 
 ```powershell
 PS> Get-ICXSession -ComputerName megatron
-
-SessionID ComputerName Session        Stream
---------- ------------ -------        ------
-        0 megatron     SSH.SshSession Renci.SshNet.ShellStream
-        1 megatron     SSH.SshSession Renci.SshNet.ShellStream
-        2 megatron     SSH.SshSession Renci.SshNet.ShellStream
-```
-
-## Example 3
-
-```powershell
-PS> Get-ICXSession -Search *mega*
 
 SessionID ComputerName Session        Stream
 --------- ------------ -------        ------
