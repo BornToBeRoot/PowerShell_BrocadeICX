@@ -2,7 +2,7 @@
 # Language     :  PowerShell 4.0
 # Filename     :  Get-ICXVLAN.ps1
 # Autor        :  BornToBeRoot (https://github.com/BornToBeRoot)
-# Description  :  Get VLANs from a Brocade ICX Switch
+# Description  :  Get VLAN(s) from a Brocade ICX Switch
 # Repository   :  https://github.com/BornToBeRoot/PowerShell_BrocadeICX
 ###############################################################################################################
 
