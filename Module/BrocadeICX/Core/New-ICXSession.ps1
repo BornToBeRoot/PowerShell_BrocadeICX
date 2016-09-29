@@ -16,9 +16,9 @@
     .EXAMPLE
     New-ICXSession -ComputerName megatron  
     
-    SessionID ComputerName Session        Stream
-    --------- ------------ -------        ------
-            0 megatron     SSH.SshSession Renci.SshNet.ShellStream
+    SessionID ComputerName AccessMode
+    --------- ------------ ----------
+            0 megatron     Privileged
 
     .LINK
     https://github.com/BornToBeRoot/PowerShell_BrocadeICX/Documentation/Function/New-ICXSession.README.md
@@ -82,7 +82,9 @@ function New-ICXSession
                     $Created_SSHSession = New-SSHSession -ComputerName $ComputerName2 -Credential $Credential -ErrorAction Stop
                 }
 
-                $SSHSession = Get-SSHSession -SessionId $Created_SSHSession.SessionID
+                $SessionID = $Created_SSHSession.SessionID
+
+                $SSHSession = Get-SSHSession -SessionId $SessionID
 
                 Write-Verbose -Message "Creating shell stream for ""$ComputerName2""..."
                 $SSHStream = $SSHSession.Session.CreateShellStream("dumb", 0, 0, 0, 0, 1000)
@@ -92,14 +94,24 @@ function New-ICXSession
                 continue
             }
 
+            $AccessMode = [String]::Empty
+
             # Create a new Brocade ICX session object
             $ICXSession = [pscustomobject] @{
-                SessionID = $Created_SSHSession.SessionID
+                SessionID = $SessionID
                 ComputerName = $ComputerName2
+                AccessMode = $AccessMode
                 Session = $SSHSession
                 Stream = $SSHStream
             }
-                    
+
+            #  Set the default parameter set
+            $ICXSession.PSObject.TypeNames.Insert(0,'BrocadeICX.ICXSession')
+            $DefaultDisplaySet = 'SessionID', 'ComputerName', 'AccessMode'
+            $DefaultDisplayPropertySet = New-Object System.Management.Automation.PSPropertySet('DefaultDisplayPropertySet',[string[]]$DefaultDisplaySet)
+            $PSStandardMembers = [System.Management.Automation.PSMemberInfo[]]@($DefaultDisplayPropertySet)
+            $ICXSession | Add-Member MemberSet PSStandardMembers $PSStandardMembers
+            
             # Add it to the global Brocade ICX sessions array
             Write-Verbose -Message "Add session ($ICXSession) to global Brocade ICX sessions..."
          	[void]$Global:BrocadeICXSessions.Add($ICXSession)
@@ -110,7 +122,7 @@ function New-ICXSession
             Write-Verbose -Message "Brocade ICX session created!"
 
             # Return the created Brocade ICX session
-            $ICXSession
+            Get-ICXSession -SessionID $SessionID
         }       
     }
 

@@ -108,6 +108,14 @@ function Invoke-ICXCommand
         # Calculate the timeout in Milliseconds
         $TimeoutMilliseconds = $Timeout * 1000
 
+        # The last line of the output "normally" contains SSH@HOSTNAME> or SSH@HOSTNAME# or SSH@HOSTNAME(config)#
+        $RegexSSHatHostname = "(SSH@){1}[0-9A-Z_-]+([(]{1}(config){1}[)]{1})*(>|#){1}"
+
+        # Regex for terminal mode detection (access rights)
+        $Regex_UserMode = "(SSH@){1}[0-9A-Z_-]+(>){1}"
+        $Regex_PrivilegedMode = "(SSH@){1}[0-9A-Z_-]+(#){1}"
+        $Regex_ConfigMode = "(SSH@){1}[0-9A-Z_-]+([(]{1}(config){1}[)]{1})(#){1}"
+
         # Temporary array to store Brocade ICX sessions which are to be removed later (e.g. if SSH connection was dropped)
         $BadICXSessions = @()
 
@@ -149,9 +157,6 @@ function Invoke-ICXCommand
 
                 # Temporary output as array, which is returned from ssh shell stream
                 $TemporaryOutput = @()
-
-                # The last line of the output "normally" contains SSH@HOSTNAME> or SSH@HOSTNAME# or SSH@HOSTNAME(config)#
-                $RegexSSHatHostname = "(SSH@){1}[0-9A-Z_-]+([(]{1}(config){1}[)]{1})*(>|#){1}"
 
                 # Auto detect output or wait a specific time (compatibility mode)...
                 if($PSCmdlet.ParameterSetName -eq 'AutoDetectOutput')
@@ -249,10 +254,36 @@ function Invoke-ICXCommand
                 # Output as array, which is returned
                 $Output = @()
 
-                # Process the output - replace SSH command and SSH@HOSTNAME#
+                $AccessMode = [String]::Empty
+
+                # Process the output - replace SSH command and SSH@HOSTNAME> or SSH@HOSTNAME# or SSH@HOSTNAME(config)#
                 foreach($Line in $TemporaryOutput)
                 {
+                    # Detect TerminalMode while process output... So we do not have to loop through the output twice
+                    if($Line -match $Regex_UserMode)
+                    {
+                        $AccessMode = "User" 
+                    }
+                    elseif($Line -match $Regex_PrivilegedMode)
+                    {
+                        $AccessMode = "Privileged"
+                    }
+                    elseif($Line -match $Regex_ConfigMode)
+                    {
+                        $AccessMode = "Config"
+                    }
+
                     $Output += $Line -replace $OriginalSSHCommand, "" -replace $RegexSSHatHostname, ""
+                }
+
+                # Update session in global array if TerminalMode has changed
+                if($Session2.AccessMode -ne $AccessMode)
+                {
+                    Write-Verbose "TerminalMode has changed to: $TerminalMode"
+                    
+                    $SessionIndex = $BrocadeICXSessions.IndexOf($Session2)
+                    $Session2.AccessMode = $AccessMode
+                    $BrocadeICXSessions[$SessionIndex] = $Session2
                 }
 
                 $IndexStart = 0

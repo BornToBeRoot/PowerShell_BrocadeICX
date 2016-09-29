@@ -269,8 +269,7 @@ function Get-ICXVLAN
                      
                         Remove-ICXSession -Session $ICXSession
                     }                    
-                }
-                
+                }                
             }
             
             "Session" {

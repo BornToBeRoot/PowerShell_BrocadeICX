@@ -21,7 +21,7 @@ I will constantly write new scripts (depends on what i/we need), to simplify tas
 
 #### Available functions:
 
-| Function | Type | Description | Help | 
+| Function | Category | Description | Help | 
 | :--- | :--- | :--- | :---: |
 | [Get-ICXSession](Module/BrocadeICX/Core/Get-ICXSession.ps1) | Core | Get a Brocade ICX session | [:book:](Documentation/Function/Get-ICXSession.README.md) |
 | [Invoke-ICXCommand](Module/BrocadeICX/Core/Invoke-ICXCommand.ps1) | Core | Invoke an SSH command in a Brocade ICX sessions | [:book:](Documentation/Function/Invoke-ICXCommand.README.md) |

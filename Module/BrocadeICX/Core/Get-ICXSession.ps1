@@ -14,22 +14,29 @@
     Get one or multiple Brocade ICX sessions based on SessionID or ComputerName.
     
     .EXAMPLE
-    Get-ICXSession -SessionID 1,2   
+    Get-ICXSession -SessionID 1, 2   
 
-    SessionID ComputerName Session        Stream
-    --------- ------------ -------        ------
-            1 megatron     SSH.SshSession Renci.SshNet.ShellStream
-            2 megatron     SSH.SshSession Renci.SshNet.ShellStream
+    SessionID ComputerName AccessMode
+    --------- ------------ ----------
+            1 MEGATRON     Privileged
+            2 megatron     Config
 
     .EXAMPLE
-    Get-ICXSession -ComputerName megatron
+    Get-ICXSession -ComputerName MEGATRON | Select-Object * | Format-Table
 
-    SessionID ComputerName Session        Stream
-    --------- ------------ -------        ------
-            0 megatron     SSH.SshSession Renci.SshNet.ShellStream
-            1 megatron     SSH.SshSession Renci.SshNet.ShellStream
-            2 megatron     SSH.SshSession Renci.SshNet.ShellStream
+    SessionID ComputerName AccessMode Session        Stream
+    --------- ------------ ---------- -------        ------
+            0 megatron     Privileged SSH.SshSession Renci.SshNet.ShellStream
+            1 MEGATRON     Privileged SSH.SshSession Renci.SshNet.ShellStream
+            2 megatron     Config     SSH.SshSession Renci.SshNet.ShellStream
    
+    .EXAMPLE
+    Get-ICXSession -ComputerName MEGATRON -CaseSensitive
+
+    SessionID ComputerName AccessMode
+    --------- ------------ ----------
+            1 MEGATRON     Privileged
+
     .LINK
     https://github.com/BornToBeRoot/PowerShell_BrocadeICX/Documentation/Function/Get-ICXSession.README.md
 #>
@@ -109,7 +116,7 @@ function Get-ICXSession
 
         Write-Verbose -Message "$($ICXSessions.Count) Brocade ICX session(s) found!"
 
-        $ICXSessions
+        $ICXSessions        
     }
 
     End{

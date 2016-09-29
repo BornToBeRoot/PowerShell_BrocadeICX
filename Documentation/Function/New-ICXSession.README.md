@@ -21,7 +21,7 @@ New-ICXSession [-ComputerName] <String[]> [[-AcceptKey]] [[-Credential] <PSCrede
 ```powershell
 PS> New-ICXSession -ComputerName megatron  
     
-SessionID ComputerName Session        Stream
---------- ------------ -------        ------
-        0 megatron     SSH.SshSession Renci.SshNet.ShellStream
+SessionID ComputerName AccessMode
+--------- ------------ ----------
+        0 megatron     Privileged
 ```

@@ -23,22 +23,32 @@ Get-ICXSession [-ComputerName] <String[]> [[-CaseSensitive]] [<CommonParameters>
 ## Example 1
 
 ```powershell
-PS> Get-ICXSession -SessionID 1,2   
+PS> Get-ICXSession -SessionID 1, 2   
 
-SessionID ComputerName Session        Stream
---------- ------------ -------        ------
-        1 megatron     SSH.SshSession Renci.SshNet.ShellStream
-        2 megatron     SSH.SshSession Renci.SshNet.ShellStream
+SessionID ComputerName AccessMode
+--------- ------------ ----------
+        1 MEGATRON     Privileged
+        2 megatron     Config
 ```
 
 ## Example 2
 
 ```powershell
-PS> Get-ICXSession -ComputerName megatron
+PS> Get-ICXSession -ComputerName MEGATRON | Select-Object * | Format-Table
 
-SessionID ComputerName Session        Stream
---------- ------------ -------        ------
-        0 megatron     SSH.SshSession Renci.SshNet.ShellStream
-        1 megatron     SSH.SshSession Renci.SshNet.ShellStream
-        2 megatron     SSH.SshSession Renci.SshNet.ShellStream
+SessionID ComputerName AccessMode Session        Stream
+--------- ------------ ---------- -------        ------
+        0 megatron     Privileged SSH.SshSession Renci.SshNet.ShellStream
+        1 MEGATRON     Privileged SSH.SshSession Renci.SshNet.ShellStream
+        2 megatron     Config     SSH.SshSession Renci.SshNet.ShellStream
+```
+
+## Example 3
+
+```powershell
+PS> Get-ICXSession -ComputerName MEGATRON -CaseSensitive
+
+SessionID ComputerName AccessMode
+--------- ------------ ----------
+        1 MEGATRON     Privileged
 ```
