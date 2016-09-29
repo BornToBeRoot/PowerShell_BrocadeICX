@@ -1,12 +1,12 @@
 # Get-ICXVLAN
 
-Get VLANs from a Brocade ICX Switch.
+Get VLAN(s) from a Brocade ICX Switch.
 
 * [view function](https://github.com/BornToBeRoot/PowerShell_BrocadeICX/blob/master/Module/BrocadeICX/Functions/VLAN/Get-ICXVLAN.ps1)
 
 ## Description
 
-Get VLANs from a Brocade ICX Switch as PSCustomObject, which can be further processed.
+Get VLAN(s) from a Brocade ICX Switch as PSCustomObject, which can be further processed.
 
 ![Screenshot](Images/Get-ICXVLAN.png?raw=true)
 

@@ -8,10 +8,10 @@
 
 <#
     .SYNOPSIS
-    Get VLANs from a Brocade ICX Switch
+    Get VLAN(s) from a Brocade ICX Switch
 
     .DESCRIPTION
-    Get VLANs from a Brocade ICX Switch as PSCustomObject, which can be further processed.
+    Get VLAN(s) from a Brocade ICX Switch as PSCustomObject, which can be further processed.
 
     .EXAMPLE
     Get-ICXVLAN -ComputerName megatron
