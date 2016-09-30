@@ -14,21 +14,20 @@
     Get VLAN(s) from a Brocade ICX Switch as PSCustomObject, which can be further processed.
 
     .EXAMPLE
-    Get-ICXVLAN -ComputerName megatron
+    Get-ICXVLAN -ComputerName megatron | ? {$_.Name -eq "Test1"} | ft
 
-    SessionID ComputerName ID   Name         By   TaggedPort                   UntaggedPort
-    --------- ------------ --   ----         --   ----------                   ------------
-            2 megatron     1001 Test1        port {0/1/1}                      {0/1/5, 0/1/6, 0/1/7, 0/1/8, ...}
-            2 megatron     1002 Test2        port {0/1/1, 0/1/2, 0/1/3, 0/1/4} {0/1/11, 0/1/12, 0/1/13, 0/1/14, ...}
+    ID   Name  By   TaggedPort UntaggedPort
+    --   ----  --   ---------- ------------
+    1001 Test1 port {0/1/4}    {0/1/37, 0/1/39, 0/1/45, 0/1/46}
     
     .EXAMPLE
-    $Session = Get-ICXSession -SessionID 0,2
-    Get-ICXVLAN -Session $Session | Where-Object {$_.Name -eq "Test1"}
+    New-ICXSession -ComputerName MEGATRON, megatron
+    Get-ICXVLAN -Session (Get-ICXSession) | ? {$_.Name -eq "Test1"} | ft
 
-    SessionID ComputerName ID   Name         By   TaggedPort                   UntaggedPort
-    --------- ------------ --   ----         --   ----------                   ------------
-            0 megatron     1001 Test1        port {0/1/1}                      {0/1/5, 0/1/6, 0/1/7, 0/1/8, ...}
-            2 megatron     1001 Test1        port {0/1/1}                      {0/1/5, 0/1/6, 0/1/7, 0/1/8, ...}
+    SessionID ComputerName ID   Name  By   TaggedPort UntaggedPort
+    --------- ------------ --   ----  --   ---------- ------------
+            0 MEGATRON     1001 Test1 port {0/1/4}    {0/1/37, 0/1/39, 0/1/45, 0/1/46}
+            1 megatron     1001 Test1 port {0/1/4}    {0/1/37, 0/1/39, 0/1/45, 0/1/46}
 
     .LINK
     https://github.com/BornToBeRoot/PowerShell_BrocadeICX/Documentation/Function/Get-ICXVLAN.README.md
@@ -71,7 +70,8 @@ function Get-ICXVLAN
     Begin{
         function get_ICXVLAN {
             param(
-                $Session
+                $Session,
+                $DefaultDisplaySet
             )
 
             Begin{
@@ -218,15 +218,23 @@ function Get-ICXVLAN
 
                         Write-Verbose "End of VLAN: $VLAN_ID ($VLAN_Name)!"
 
-                        [pscustomobject] @{
+                        $ICXVLAN = [pscustomobject] @{
                             SessionID = $Session.SessionID
                             ComputerName = $Session.ComputerName
-                            ID = $VLAN_ID
+                            Id = $VLAN_ID
                             Name = $VLAN_Name
                             By = $VLAN_By
                             TaggedPort = $VLAN_TaggedPort
                             UntaggedPort = $VLAN_UntaggedPort
                         }
+
+                        #  Set the default parameter set
+                        $ICXVLAN.PSObject.TypeNames.Insert(0,'BrocadeICX.ICXVLAN')
+                        $DefaultDisplayPropertySet = New-Object System.Management.Automation.PSPropertySet('DefaultDisplayPropertySet',[string[]]$DefaultDisplaySet)
+                        $PSStandardMembers = [System.Management.Automation.PSMemberInfo[]]@($DefaultDisplayPropertySet)
+                        $ICXVLAN | Add-Member MemberSet PSStandardMembers $PSStandardMembers
+
+                        $ICXVLAN
 
                         # Clear the variale(s)/array(s)
                         $VLAN_ID = [String]::Empty
@@ -244,7 +252,15 @@ function Get-ICXVLAN
         }
     }
 
-    Process{  
+    Process{
+        
+        $DefaultDisplaySet = 'ID', 'Name', 'By', 'TaggedPort', 'UntaggedPort'
+
+        if($Session.Count -gt 1 -or $ComputerName.Count -gt 1)
+        {
+            $DefaultDisplaySet = 'SessionID', 'ComputerName' + $DefaultDisplaySet
+        }
+
         switch($PSCmdlet.ParameterSetName)
         {
             "ComputerName" {
@@ -265,7 +281,7 @@ function Get-ICXVLAN
             
                     if($null -ne $ICXSession)
                     {
-                        get_ICXVLAN -Session $ICXSession
+                        get_ICXVLAN -Session $ICXSession -DefaultDisplaySet $DefaultDisplaySet
                      
                         Remove-ICXSession -Session $ICXSession
                     }                    
@@ -277,7 +293,7 @@ function Get-ICXVLAN
                 {
                     if(Test-ICXSession -Session $Session2)
                     {
-                        get_ICXVLAN -Session $Session2
+                        get_ICXVLAN -Session $Session2 -DefaultDisplaySet $DefaultDisplaySet
                     }
                     else 
                     {
