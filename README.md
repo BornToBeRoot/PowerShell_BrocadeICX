@@ -30,7 +30,7 @@ I will constantly write new scripts (depends on what i/we need), to simplify tas
 | [Test-ICXSession](Module/BrocadeICX/Core/Test-ICXSession.ps1) | Core | Test if a session is a valid Brocade ICX session | [:book:](Documentation/Function/Test-ICXSession.README.md) |
 | [Get-ICXInterface](Module/BrocadeICX/Functions/Interface/Get-ICXInterface.ps1) | Interface | Get interface(s) from a Brocade ICX Switch | [:book:](Documentation/Function/Get-ICXInterface.README.md) |
 | [Get-ICXVLAN](Module/BrocadeICX/Functions/VLAN/Get-ICXVLAN.ps1) | VLAN | Get VLAN from a Brocade ICX Switch | [:book:](Documentation/Function/Get-ICXVLAN.README.md) |
-
+| [Test-ICXVLAN](Module/BrocadeICX/Functions/VLAN/Test-ICXVLAN.ps1) | VLAN | Test if a VLAN exist on a Brocade ICX Switch | [:book:](Documentation/Function/Test-ICXVLAN.README.md) |
 ## Scripts
 
 #### How to install the scripts?
