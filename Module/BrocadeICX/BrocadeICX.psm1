@@ -16,4 +16,4 @@ if(-not(Test-Path Variable:BrocadeICXSessions))
 Get-ChildItem -Path "$PSScriptRoot\Core" -Recurse | Where-Object {$_.Name.EndsWith(".ps1")} | ForEach-Object {. $_.FullName}
 
 # Import additional functions
-Get-ChildItem -Path "$PSScriptRoot\Functions" -Recurse | Where-Object {$_.Name.EndsWith(".ps1")} | ForEach-Object {. $_.FullName}
+Get-ChildItem -Path "$PSScriptRoot\Functions" -Recurse | Where-Object {($_.Name.EndsWith(".ps1")) -and (-not($_.Name.StartsWith("_")))} | ForEach-Object {. $_.FullName}
