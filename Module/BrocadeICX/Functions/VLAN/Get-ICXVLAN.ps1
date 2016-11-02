@@ -96,7 +96,7 @@ function Get-ICXVLAN
 
                 $VLAN_Detected = $false
                 
-                $VLAN_ID = [String]::Empty
+                [Int32]$VLAN_ID
                 $VLAN_Name = [String]::Empty
                 $VLAN_By = [String]::Empty   
                 $VLAN_TaggedPort = @()
@@ -237,7 +237,6 @@ function Get-ICXVLAN
                         $ICXVLAN
 
                         # Clear the variale(s)/array(s)
-                        $VLAN_ID = [String]::Empty
                         $VLAN_Name = [String]::Empty
                         $VLAN_By = [String]::Empty   
                         $VLAN_TaggedPort = @()
@@ -252,8 +251,7 @@ function Get-ICXVLAN
         }
     }
 
-    Process{
-        
+    Process{      
         $DefaultDisplaySet = 'ID', 'Name', 'By', 'TaggedPort', 'UntaggedPort'
 
         if($Session.Count -gt 1 -or $ComputerName.Count -gt 1)
