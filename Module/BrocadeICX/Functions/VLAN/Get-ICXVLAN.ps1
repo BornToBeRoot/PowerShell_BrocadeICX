@@ -96,9 +96,6 @@ function Get-ICXVLAN
 
                 $VLAN_Detected = $false
                 
-                [Int32]$VLAN_ID
-                $VLAN_Name = [String]::Empty
-                $VLAN_By = [String]::Empty   
                 $VLAN_TaggedPort = @()
                 $VLAN_UntaggedPort = @()
 
@@ -128,7 +125,7 @@ function Get-ICXVLAN
                         {
                             if($Line_Split[$i] -eq "vlan")
                             {
-                                $VLAN_ID = $Line_Split[$i + 1]
+                                [int]$VLAN_ID = $Line_Split[$i + 1]
                             }
                             elseif($Line_Split[$i] -eq "name")
                             {
