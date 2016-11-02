@@ -259,7 +259,7 @@ function Invoke-ICXCommand
                 # Process the output - replace SSH command and SSH@HOSTNAME> or SSH@HOSTNAME# or SSH@HOSTNAME(config)#
                 foreach($Line in $TemporaryOutput)
                 {
-                    # Detect TerminalMode while process output... So we do not have to loop through the output twice
+                    # Detect AccessMode while process output... So we do not have to loop through the output twice
                     if($Line -match $Regex_UserMode)
                     {
                         $AccessMode = "User" 
@@ -279,7 +279,7 @@ function Invoke-ICXCommand
                 # Update session in global array if TerminalMode has changed
                 if($Session2.AccessMode -ne $AccessMode)
                 {
-                    Write-Verbose "TerminalMode has changed to: $TerminalMode"
+                    Write-Verbose "TerminalMode has changed to: $AccessMode"
                     
                     $SessionIndex = $BrocadeICXSessions.IndexOf($Session2)
                     $Session2.AccessMode = $AccessMode
