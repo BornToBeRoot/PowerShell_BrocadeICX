@@ -21,7 +21,7 @@
             0 megatron     Privileged
 
     .LINK
-    https://github.com/BornToBeRoot/PowerShell_BrocadeICX/Documentation/Function/New-ICXSession.README.md
+    https://github.com/BornToBeRoot/PowerShell_BrocadeICX/blob/master/Documentation/Function/New-ICXSession.README.md
 #>
 
 function New-ICXSession

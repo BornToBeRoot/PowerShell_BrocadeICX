@@ -25,7 +25,7 @@
     0/1/5 Up   Forward Full   1G    None  No  1001 0        0000.0000.0004
 
     .LINK
-    https://github.com/BornToBeRoot/PowerShell_BrocadeICX/Documentation/Function/Get-ICXInterface.README.md
+    https://github.com/BornToBeRoot/PowerShell_BrocadeICX/blob/master/Documentation/Function/Get-ICXInterface.README.md
 #>
 
 function Get-ICXInterface

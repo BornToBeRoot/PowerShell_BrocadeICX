@@ -25,7 +25,7 @@
     false
 
     .LINK
-    https://github.com/BornToBeRoot/PowerShell_BrocadeICX/Documentation/Function/Test-ICXSession.README.md
+    https://github.com/BornToBeRoot/PowerShell_BrocadeICX/blob/master/Documentation/Function/Test-ICXSession.README.md
 #>
 
 function Test-ICXSession

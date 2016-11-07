@@ -38,7 +38,7 @@
             1 MEGATRON     Privileged
 
     .LINK
-    https://github.com/BornToBeRoot/PowerShell_BrocadeICX/Documentation/Function/Get-ICXSession.README.md
+    https://github.com/BornToBeRoot/PowerShell_BrocadeICX/blob/master/Documentation/Function/Get-ICXSession.README.md
 #>
 
 function Get-ICXSession

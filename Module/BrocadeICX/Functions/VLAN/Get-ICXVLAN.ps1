@@ -30,7 +30,7 @@
             1 megatron     1001 Test1 port {0/1/4}    {0/1/37, 0/1/39, 0/1/45, 0/1/46}
 
     .LINK
-    https://github.com/BornToBeRoot/PowerShell_BrocadeICX/Documentation/Function/Get-ICXVLAN.README.md
+    https://github.com/BornToBeRoot/PowerShell_BrocadeICX/blob/master/Documentation/Function/Get-ICXVLAN.README.md
 #>
 
 function Get-ICXVLAN

@@ -23,7 +23,7 @@
     Remove-ICXSession -ComputerName megatron
     
     .LINK
-    https://github.com/BornToBeRoot/PowerShell_BrocadeICX/Documentation/Function/Remove-ICXSession.README.md
+    https://github.com/BornToBeRoot/PowerShell_BrocadeICX/blob/master/Documentation/Function/Remove-ICXSession.README.md
 #>
 
 function Remove-ICXSession

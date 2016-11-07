@@ -25,7 +25,7 @@
     False
 
     .LINK
-    https://github.com/BornToBeRoot/PowerShell_BrocadeICX/Documentation/Function/Test-ICXVLAN.README.md
+    https://github.com/BornToBeRoot/PowerShell_BrocadeICX/blob/master/Documentation/Function/Get-ICXVLAN.README.md
 #>
 
 function Test-ICXVLAN

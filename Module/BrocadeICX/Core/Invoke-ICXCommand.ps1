@@ -36,7 +36,7 @@
     Upload running-config to TFTP server done.
 
     .LINK
-    https://github.com/BornToBeRoot/PowerShell_BrocadeICX/Documentation/Function/Invoke-ICXCommand.README.md
+    https://github.com/BornToBeRoot/PowerShell_BrocadeICX/blob/master/Documentation/Function/Invoke-ICXCommand.README.md
 #>
 
 function Invoke-ICXCommand
