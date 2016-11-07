@@ -41,8 +41,8 @@ I will constantly write new scripts (depends on what i/we need), to simplify tas
 
 | Function | Description | Help | 
 | :--- | :--- | :---: |
-| [Get-ICXVLAN](Module/BrocadeICX/Functions/VLAN/Get-ICXVLAN.ps1) | VLAN | Get VLAN from a Brocade ICX Switch | [:book:](Documentation/Function/Get-ICXVLAN.README.md) |
-| [Test-ICXVLAN](Module/BrocadeICX/Functions/VLAN/Test-ICXVLAN.ps1) | VLAN | Test if a VLAN exist on a Brocade ICX Switch | [:book:](Documentation/Function/Test-ICXVLAN.README.md) |
+| [Get-ICXVLAN](Module/BrocadeICX/Functions/VLAN/Get-ICXVLAN.ps1) | Get VLAN from a Brocade ICX Switch | [:book:](Documentation/Function/Get-ICXVLAN.README.md) |
+| [Test-ICXVLAN](Module/BrocadeICX/Functions/VLAN/Test-ICXVLAN.ps1) | Test if a VLAN exist on a Brocade ICX Switch | [:book:](Documentation/Function/Test-ICXVLAN.README.md) |
 
 ## Scripts
 
