@@ -21,16 +21,29 @@ I will constantly write new scripts (depends on what i/we need), to simplify tas
 
 #### Available functions:
 
-| Function | Category | Description | Help | 
-| :--- | :--- | :--- | :---: |
-| [Get-ICXSession](Module/BrocadeICX/Core/Get-ICXSession.ps1) | Core | Get a Brocade ICX session | [:book:](Documentation/Function/Get-ICXSession.README.md) |
-| [Invoke-ICXCommand](Module/BrocadeICX/Core/Invoke-ICXCommand.ps1) | Core | Invoke an SSH command in a Brocade ICX sessions | [:book:](Documentation/Function/Invoke-ICXCommand.README.md) |
-| [New-ICXSession](Module/BrocadeICX/Core/New-ICXSession.ps1) | Core | Create a new Brocade ICX sessions over SSH | [:book:](Documentation/Function/New-ICXSession.README.md) |
-| [Remove-ICXSession](Module/BrocadeICX/Core/Remove-ICXSession.ps1) | Core | Remove a Brocade ICX session | [:book:](Documentation/Function/Remove-ICXSession.README.md) |
-| [Test-ICXSession](Module/BrocadeICX/Core/Test-ICXSession.ps1) | Core | Test if a session is a valid Brocade ICX session | [:book:](Documentation/Function/Test-ICXSession.README.md) |
-| [Get-ICXInterface](Module/BrocadeICX/Functions/Interface/Get-ICXInterface.ps1) | Interface | Get interface(s) from a Brocade ICX Switch | [:book:](Documentation/Function/Get-ICXInterface.README.md) |
+> [Core](Module/BrocadeICX/Core)
+
+| Function | Description | Help | 
+| :--- | :--- | :---: |
+| [Get-ICXSession](Module/BrocadeICX/Core/Get-ICXSession.ps1) | Get a Brocade ICX session | [:book:](Documentation/Function/Get-ICXSession.README.md) |
+| [Invoke-ICXCommand](Module/BrocadeICX/Core/Invoke-ICXCommand.ps1) | Invoke an SSH command in a Brocade ICX sessions | [:book:](Documentation/Function/Invoke-ICXCommand.README.md) |
+| [New-ICXSession](Module/BrocadeICX/Core/New-ICXSession.ps1) | Create a new Brocade ICX sessions over SSH | [:book:](Documentation/Function/New-ICXSession.README.md) |
+| [Remove-ICXSession](Module/BrocadeICX/Core/Remove-ICXSession.ps1) | Remove a Brocade ICX session | [:book:](Documentation/Function/Remove-ICXSession.README.md) |
+| [Test-ICXSession](Module/BrocadeICX/Core/Test-ICXSession.ps1) | Test if a session is a valid Brocade ICX session | [:book:](Documentation/Function/Test-ICXSession.README.md) |
+
+> [Interface](Module/BrocadeICX/Interface)
+
+| Function | Description | Help | 
+| :--- | :--- | :---: |
+| [Get-ICXInterface](Module/BrocadeICX/Functions/Interface/Get-ICXInterface.ps1) | Get interface(s) from a Brocade ICX Switch | [:book:](Documentation/Function/Get-ICXInterface.README.md) |
+
+> [VLAN](Module/BrocadeICX/VLAN)
+
+| Function | Description | Help | 
+| :--- | :--- | :---: |
 | [Get-ICXVLAN](Module/BrocadeICX/Functions/VLAN/Get-ICXVLAN.ps1) | VLAN | Get VLAN from a Brocade ICX Switch | [:book:](Documentation/Function/Get-ICXVLAN.README.md) |
 | [Test-ICXVLAN](Module/BrocadeICX/Functions/VLAN/Test-ICXVLAN.ps1) | VLAN | Test if a VLAN exist on a Brocade ICX Switch | [:book:](Documentation/Function/Test-ICXVLAN.README.md) |
+
 ## Scripts
 
 #### How to install the scripts?
