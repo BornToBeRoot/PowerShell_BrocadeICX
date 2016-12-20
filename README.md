@@ -21,7 +21,7 @@ I will constantly write new scripts (depends on what i/we need), to simplify tas
 
 #### Available functions:
 
-> [Core](Module/BrocadeICX/Core)
+**Folder: [Core](Module/BrocadeICX/Core)**
 
 | Function | Description | Help | 
 | :--- | :--- | :---: |
@@ -31,13 +31,13 @@ I will constantly write new scripts (depends on what i/we need), to simplify tas
 | [Remove-ICXSession](Module/BrocadeICX/Core/Remove-ICXSession.ps1) | Remove a Brocade ICX session | [:book:](Documentation/Function/Remove-ICXSession.README.md) |
 | [Test-ICXSession](Module/BrocadeICX/Core/Test-ICXSession.ps1) | Test if a session is a valid Brocade ICX session | [:book:](Documentation/Function/Test-ICXSession.README.md) |
 
-> [Interface](Module/BrocadeICX/Interface)
+**Folder: [Interface](Module/BrocadeICX/Interface)**
 
 | Function | Description | Help | 
 | :--- | :--- | :---: |
 | [Get-ICXInterface](Module/BrocadeICX/Functions/Interface/Get-ICXInterface.ps1) | Get interface(s) from a Brocade ICX Switch | [:book:](Documentation/Function/Get-ICXInterface.README.md) |
 
-> [VLAN](Module/BrocadeICX/VLAN)
+**Folder: [VLAN](Module/BrocadeICX/VLAN)**
 
 | Function | Description | Help | 
 | :--- | :--- | :---: |
