@@ -1,7 +1,7 @@
 ###############################################################################################################
 # Language     :  PowerShell 4.0
 # Filename     :  New-ICXSession.ps1
-# Autor        :  BornToBeRoot (https://github.com/BornToBeRoot)
+# Author       :  BornToBeRoot (https://github.com/BornToBeRoot)
 # Description  :  Create a new Brocade ICX sessions over SSH
 # Repository   :  https://github.com/BornToBeRoot/PowerShell_BrocadeICX
 ###############################################################################################################
@@ -42,7 +42,7 @@ function New-ICXSession {
         [Parameter(
             Position=2,
             Mandatory=$false,
-            HelpMessage='Credentials to authenticate agains a Brocade ICX Switch (SSH connection)')]
+            HelpMessage='Credentials to authenticate against a Brocade ICX Switch (SSH connection)')]
         [System.Management.Automation.PSCredential]
         [System.Management.Automation.CredentialAttribute()]
         $Credential
@@ -57,7 +57,7 @@ function New-ICXSession {
 
     Process {
         # If no credentials are submitted by parameter, prompt the user to enter them
-        if($Credential -eq $null) {
+        if ($Credential -eq $null) {
             try {
                 $Credential = Get-Credential $null
             }
@@ -69,11 +69,11 @@ function New-ICXSession {
         Write-Verbose -Message "Accept key is set to: $AcceptKey"
 
         # Create a new Brocade ICX session for each Switch
-        foreach($ComputerName2 in $ComputerName) {
+        foreach ($ComputerName2 in $ComputerName) {
             Write-Verbose -Message "Create new SSH session for ""$ComputerName2""."
 
             try {
-                if($AcceptKey) {
+                if ($AcceptKey) {
                     $Created_SSHSession = New-SSHSession -ComputerName $ComputerName2 -Credential $Credential -AcceptKey -ErrorAction Stop
                 }
                 else {
@@ -103,7 +103,7 @@ function New-ICXSession {
                 Stream = $SSHStream
             }
 
-            #  Set the default parameter set
+            # Set the default parameter set
             $ICXSession.PSObject.TypeNames.Insert(0,'BrocadeICX.ICXSession')
             $DefaultDisplaySet = 'SessionID', 'ComputerName', 'AccessMode'
             $DefaultDisplayPropertySet = New-Object System.Management.Automation.PSPropertySet('DefaultDisplayPropertySet',[string[]]$DefaultDisplaySet)
