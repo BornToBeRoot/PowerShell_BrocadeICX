@@ -1,14 +1,14 @@
 # PowerShell - BrocadeICX
 
-Module and script collection for PowerShell to administrate Brocade ICX Switches over SSH.
+Module and script collection for PowerShell to administrate Brocade ICX switches over SSH.
 
 ## Description
 
-This module and collection of usefull scripts, allows you to administrate your Brocade ICX Switches over SSH-Protocol with the Windows PowerShell.
+This module and collection of usefull scripts, allows you to administrate your Brocade ICX switches over SSH-Protocol with the Windows PowerShell.
 
-With the "BrocadeICX"-Module you can establish a connection via SSH to one ore more Brocade ICX Switch devices and executing commands without receiving the following error message: `☺Protocol error, doesn't start with scp!`
+With the "BrocadeICX" module you can establish a connection via SSH to one ore more Brocade ICX switch devices and executing commands without receiving the following error message: `☺Protocol error, doesn't start with scp!`
 
-I will constantly write new scripts (depends on what i/we need), to simplify tasks like backup to a TFTP-Server or to get and set VLANs.
+You can write tasks like backup the configuration to a TFTP server or get and set VLANs on an interface.
 
 ## Module
 
@@ -35,14 +35,14 @@ I will constantly write new scripts (depends on what i/we need), to simplify tas
 
 | Function | Description | Help | 
 | :--- | :--- | :---: |
-| [Get-ICXInterface](Module/BrocadeICX/Functions/Interface/Get-ICXInterface.ps1) | Get interface(s) from a Brocade ICX Switch | [:book:](Documentation/Function/Get-ICXInterface.README.md) |
+| [Get-ICXInterface](Module/BrocadeICX/Functions/Interface/Get-ICXInterface.ps1) | Get interface(s) from a Brocade ICX switch | [:book:](Documentation/Function/Get-ICXInterface.README.md) |
 
 **Folder: [VLAN](Module/BrocadeICX/Functions/VLAN)**
 
 | Function | Description | Help | 
 | :--- | :--- | :---: |
-| [Get-ICXVLAN](Module/BrocadeICX/Functions/VLAN/Get-ICXVLAN.ps1) | Get VLAN from a Brocade ICX Switch | [:book:](Documentation/Function/Get-ICXVLAN.README.md) |
-| [Test-ICXVLAN](Module/BrocadeICX/Functions/VLAN/Test-ICXVLAN.ps1) | Test if a VLAN exist on a Brocade ICX Switch | [:book:](Documentation/Function/Test-ICXVLAN.README.md) |
+| [Get-ICXVLAN](Module/BrocadeICX/Functions/VLAN/Get-ICXVLAN.ps1) | Get VLAN from a Brocade ICX switch | [:book:](Documentation/Function/Get-ICXVLAN.README.md) |
+| [Test-ICXVLAN](Module/BrocadeICX/Functions/VLAN/Test-ICXVLAN.ps1) | Test if a VLAN exist on a Brocade ICX switch | [:book:](Documentation/Function/Test-ICXVLAN.README.md) |
 
 ## Scripts
 
