@@ -1,4 +1,4 @@
-# PowerShell - BrocadeICX
+# PowerShell module | BrocadeICX
 
 Module and script collection for PowerShell to administrate Brocade ICX switches over SSH.
 
